@@ -1,0 +1,21 @@
+services:
+  web:
+    image: nginx:latest
+    container_name: lvda-website
+    volumes:
+      - ./website:/usr/share/nginx/html
+    networks:
+      - isolated_network
+    restart: unless-stopped
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    command: tunnel --no-autoupdate run --token VERY_LONG_TOKEN_HERE  
+    networks:
+      - isolated_network
+    restart: unless-stopped
+
+networks:
+  isolated_network:
+    external: true
