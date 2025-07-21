@@ -9,6 +9,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Auto-refresh every 30 seconds
     setInterval(refreshData, 30000);
     
+    // Set up refresh button
+    document.getElementById('refreshBtn').addEventListener('click', refreshData);
+    
+    // Set up page size change handler
+    document.getElementById('pageSize').addEventListener('change', function() {
+        loadMessages(1);
+    });
+    
     // Set up event delegation for dynamically created buttons
     document.addEventListener('click', function(e) {
         // Handle "Voir Détails" button
@@ -27,6 +35,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target.closest('.btn-delete')) {
             const messageId = e.target.closest('.btn-delete').dataset.messageId;
             deleteMessage(messageId);
+        }
+        
+        // Handle pagination links
+        if (e.target.closest('.pagination-link')) {
+            e.preventDefault();
+            const page = parseInt(e.target.closest('.pagination-link').dataset.page);
+            loadMessages(page);
         }
     });
 });
@@ -147,7 +162,7 @@ function updatePagination() {
     if (currentPage > 1) {
         paginationHtml += `
             <li class="page-item">
-                <a class="page-link" href="#" onclick="loadMessages(${currentPage - 1})">Précédent</a>
+                <a class="page-link pagination-link" href="#" data-page="${currentPage - 1}">Précédent</a>
             </li>
         `;
     }
@@ -157,7 +172,7 @@ function updatePagination() {
         const activeClass = i === currentPage ? 'active' : '';
         paginationHtml += `
             <li class="page-item ${activeClass}">
-                <a class="page-link" href="#" onclick="loadMessages(${i})">${i}</a>
+                <a class="page-link pagination-link" href="#" data-page="${i}">${i}</a>
             </li>
         `;
     }
@@ -166,7 +181,7 @@ function updatePagination() {
     if (currentPage < totalPages) {
         paginationHtml += `
             <li class="page-item">
-                <a class="page-link" href="#" onclick="loadMessages(${currentPage + 1})">Suivant</a>
+                <a class="page-link pagination-link" href="#" data-page="${currentPage + 1}">Suivant</a>
             </li>
         `;
     }
