@@ -20,7 +20,10 @@ app.use(helmet({
             imgSrc: ["'self'", "data:"],
             fontSrc: ["'self'", "https://cdn.jsdelivr.net"]
         }
-    }
+    },
+    crossOriginOpenerPolicy: false,
+    originAgentCluster: false,
+    hsts: false
 }));
 app.use(express.json());
 app.use(express.static('public'));
