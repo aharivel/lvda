@@ -123,8 +123,11 @@ app.post('/api/contact', contactLimiter, validateContact, (req, res) => {
     );
 });
 
-// Admin API endpoints
-app.get('/api/stats', (req, res) => {
+// Admin API endpoints (both /api/ and /admin-api/ prefixes)
+app.get('/api/stats', getStats);
+app.get('/admin-api/stats', getStats);
+
+function getStats(req, res) {
     const queries = [
         'SELECT COUNT(*) as total FROM contacts',
         'SELECT COUNT(*) as unread FROM contacts WHERE read_status = 0',
@@ -153,7 +156,10 @@ app.get('/api/stats', (req, res) => {
     });
 });
 
-app.get('/api/messages', (req, res) => {
+app.get('/api/messages', getMessages);
+app.get('/admin-api/messages', getMessages);
+
+function getMessages(req, res) {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
@@ -189,7 +195,10 @@ app.get('/api/messages', (req, res) => {
     });
 });
 
-app.get('/api/messages/:id', (req, res) => {
+app.get('/api/messages/:id', getMessage);
+app.get('/admin-api/messages/:id', getMessage);
+
+function getMessage(req, res) {
     const messageId = req.params.id;
     
     db.get('SELECT * FROM contacts WHERE id = ?', [messageId], (err, row) => {
@@ -206,7 +215,10 @@ app.get('/api/messages/:id', (req, res) => {
     });
 });
 
-app.put('/api/messages/:id/read', (req, res) => {
+app.put('/api/messages/:id/read', markMessageRead);
+app.put('/admin-api/messages/:id/read', markMessageRead);
+
+function markMessageRead(req, res) {
     const messageId = req.params.id;
     
     db.run('UPDATE contacts SET read_status = 1 WHERE id = ?', [messageId], function(err) {
@@ -223,7 +235,10 @@ app.put('/api/messages/:id/read', (req, res) => {
     });
 });
 
-app.delete('/api/messages/:id', (req, res) => {
+app.delete('/api/messages/:id', deleteMessage);
+app.delete('/admin-api/messages/:id', deleteMessage);
+
+function deleteMessage(req, res) {
     const messageId = req.params.id;
     
     db.run('DELETE FROM contacts WHERE id = ?', [messageId], function(err) {

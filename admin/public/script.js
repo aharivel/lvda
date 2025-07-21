@@ -52,7 +52,7 @@ function refreshData() {
 }
 
 function loadStats() {
-    fetch('/api/stats')
+    fetch('/admin/api/stats')
         .then(response => response.json())
         .then(data => {
             document.getElementById('totalMessages').textContent = data.total || 0;
@@ -70,7 +70,7 @@ function loadStats() {
 function loadMessages(page = 1) {
     const pageSize = document.getElementById('pageSize').value;
     
-    fetch(`/api/messages?page=${page}&limit=${pageSize}`)
+    fetch(`/admin/api/messages?page=${page}&limit=${pageSize}`)
         .then(response => response.json())
         .then(data => {
             currentPage = page;
@@ -196,7 +196,7 @@ function updateLastUpdate() {
 
 function viewMessage(id) {
     console.log('viewMessage called with ID:', id);
-    fetch(`/api/messages/${id}`)
+    fetch(`/admin/api/messages/${id}`)
         .then(response => {
             console.log('Response status:', response.status);
             if (!response.ok) {
@@ -293,7 +293,7 @@ function markAsRead(id) {
         button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>En cours...';
     }
     
-    fetch(`/api/messages/${id}/read`, {
+    fetch(`/admin/api/messages/${id}/read`, {
         method: 'PUT'
     })
     .then(response => {
@@ -359,7 +359,7 @@ function deleteMessage(id) {
         button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Suppression...';
     }
     
-    fetch(`/api/messages/${id}`, {
+    fetch(`/admin/api/messages/${id}`, {
         method: 'DELETE'
     })
     .then(response => {
