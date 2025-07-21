@@ -14,7 +14,7 @@ COPY img/ /usr/share/nginx/html/img/
 COPY vendor/ /usr/share/nginx/html/vendor/
 
 # Copy admin panel files
-COPY admin/public/* /usr/share/nginx/html/admin/
+COPY admin/public/ /usr/share/nginx/html/admin/
 
 # Create basic auth file for admin (username: admin, password: admin123)
 # In production, use a stronger password and proper secret management

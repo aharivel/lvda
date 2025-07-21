@@ -124,10 +124,7 @@ app.post('/api/contact', contactLimiter, validateContact, (req, res) => {
 });
 
 // Admin API endpoints (both /api/ and /admin-api/ prefixes)
-app.get('/api/stats', getStats);
-app.get('/admin-api/stats', getStats);
-
-function getStats(req, res) {
+app.get('/api/stats', (req, res) => {
     const queries = [
         'SELECT COUNT(*) as total FROM contacts',
         'SELECT COUNT(*) as unread FROM contacts WHERE read_status = 0',
@@ -156,10 +153,37 @@ function getStats(req, res) {
     });
 });
 
-app.get('/api/messages', getMessages);
-app.get('/admin-api/messages', getMessages);
+// Duplicate admin routes
+app.get('/admin-api/stats', (req, res) => {
+    const queries = [
+        'SELECT COUNT(*) as total FROM contacts',
+        'SELECT COUNT(*) as unread FROM contacts WHERE read_status = 0',
+        'SELECT COUNT(*) as today FROM contacts WHERE date(created_at) = date("now")',
+        'SELECT COUNT(*) as week FROM contacts WHERE date(created_at) >= date("now", "-7 days")'
+    ];
+    
+    const results = {};
+    let completed = 0;
+    
+    queries.forEach((query, index) => {
+        db.get(query, (err, row) => {
+            if (err) {
+                console.error('Stats query error:', err);
+                return res.status(500).json({ error: 'Failed to fetch stats' });
+            }
+            
+            const keys = ['total', 'unread', 'today', 'week'];
+            results[keys[index]] = Object.values(row)[0];
+            
+            completed++;
+            if (completed === queries.length) {
+                res.json(results);
+            }
+        });
+    });
+});
 
-function getMessages(req, res) {
+app.get('/api/messages', (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
@@ -195,10 +219,43 @@ function getMessages(req, res) {
     });
 });
 
-app.get('/api/messages/:id', getMessage);
-app.get('/admin-api/messages/:id', getMessage);
+app.get('/admin-api/messages', (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+    
+    // Get total count
+    db.get('SELECT COUNT(*) as total FROM contacts', (err, countRow) => {
+        if (err) {
+            console.error('Count query error:', err);
+            return res.status(500).json({ error: 'Failed to fetch messages' });
+        }
+        
+        const totalMessages = countRow.total;
+        const totalPages = Math.ceil(totalMessages / limit);
+        
+        // Get messages for current page
+        db.all(
+            'SELECT * FROM contacts ORDER BY created_at DESC LIMIT ? OFFSET ?',
+            [limit, offset],
+            (err, rows) => {
+                if (err) {
+                    console.error('Messages query error:', err);
+                    return res.status(500).json({ error: 'Failed to fetch messages' });
+                }
+                
+                res.json({
+                    messages: rows,
+                    currentPage: page,
+                    totalPages: totalPages,
+                    totalMessages: totalMessages
+                });
+            }
+        );
+    });
+});
 
-function getMessage(req, res) {
+app.get('/api/messages/:id', (req, res) => {
     const messageId = req.params.id;
     
     db.get('SELECT * FROM contacts WHERE id = ?', [messageId], (err, row) => {
@@ -215,10 +272,24 @@ function getMessage(req, res) {
     });
 });
 
-app.put('/api/messages/:id/read', markMessageRead);
-app.put('/admin-api/messages/:id/read', markMessageRead);
+app.get('/admin-api/messages/:id', (req, res) => {
+    const messageId = req.params.id;
+    
+    db.get('SELECT * FROM contacts WHERE id = ?', [messageId], (err, row) => {
+        if (err) {
+            console.error('Message query error:', err);
+            return res.status(500).json({ error: 'Failed to fetch message' });
+        }
+        
+        if (!row) {
+            return res.status(404).json({ error: 'Message not found' });
+        }
+        
+        res.json(row);
+    });
+});
 
-function markMessageRead(req, res) {
+app.put('/api/messages/:id/read', (req, res) => {
     const messageId = req.params.id;
     
     db.run('UPDATE contacts SET read_status = 1 WHERE id = ?', [messageId], function(err) {
@@ -235,10 +306,41 @@ function markMessageRead(req, res) {
     });
 });
 
-app.delete('/api/messages/:id', deleteMessage);
-app.delete('/admin-api/messages/:id', deleteMessage);
+app.put('/admin-api/messages/:id/read', (req, res) => {
+    const messageId = req.params.id;
+    
+    db.run('UPDATE contacts SET read_status = 1 WHERE id = ?', [messageId], function(err) {
+        if (err) {
+            console.error('Update query error:', err);
+            return res.status(500).json({ error: 'Failed to mark message as read' });
+        }
+        
+        if (this.changes === 0) {
+            return res.status(404).json({ error: 'Message not found' });
+        }
+        
+        res.json({ success: true });
+    });
+});
 
-function deleteMessage(req, res) {
+app.delete('/api/messages/:id', (req, res) => {
+    const messageId = req.params.id;
+    
+    db.run('DELETE FROM contacts WHERE id = ?', [messageId], function(err) {
+        if (err) {
+            console.error('Delete query error:', err);
+            return res.status(500).json({ error: 'Failed to delete message' });
+        }
+        
+        if (this.changes === 0) {
+            return res.status(404).json({ error: 'Message not found' });
+        }
+        
+        res.json({ success: true });
+    });
+});
+
+app.delete('/admin-api/messages/:id', (req, res) => {
     const messageId = req.params.id;
     
     db.run('DELETE FROM contacts WHERE id = ?', [messageId], function(err) {
