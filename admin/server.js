@@ -9,7 +9,19 @@ const app = express();
 const port = process.env.PORT || 3002;
 
 // Security middleware
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
+            scriptSrcElem: ["'self'", "https://cdn.jsdelivr.net"],
+            scriptSrcAttr: ["'none'"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+            imgSrc: ["'self'", "data:"],
+            fontSrc: ["'self'", "https://cdn.jsdelivr.net"]
+        }
+    }
+}));
 app.use(express.json());
 app.use(express.static('public'));
 
