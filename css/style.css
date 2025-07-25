@@ -10,29 +10,33 @@ input, textarea, select, button {
     font-family: "Frank Ruhl Libre", serif;
 }
 
-/* Text Emphasis Styles */
+/* Text Emphasis Styles - Enhanced specificity and styling */
 .text-highlight {
-    color: var(--brand);
-    font-weight: 600;
+    color: var(--brand) !important;
+    font-weight: 600 !important;
+    font-family: "Frank Ruhl Libre", serif;
 }
 
 .text-strong {
-    font-weight: 700;
-    color: var(--comp);
+    font-weight: 700 !important;
+    color: var(--comp) !important;
+    font-family: "Frank Ruhl Libre", serif;
 }
 
 .text-accent {
-    color: var(--brand-dark);
-    font-weight: 600;
+    color: var(--brand-dark) !important;
+    font-weight: 600 !important;
+    font-family: "Frank Ruhl Libre", serif;
     text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 .method-highlight {
-    background: linear-gradient(120deg, rgba(100, 202, 218, 0.15) 0%, rgba(100, 202, 218, 0.15) 100%);
+    background: linear-gradient(120deg, rgba(100, 202, 218, 0.15) 0%, rgba(100, 202, 218, 0.15) 100%) !important;
     padding: 2px 6px;
     border-radius: 4px;
-    font-weight: 600;
-    color: var(--brand-dark);
+    font-weight: 600 !important;
+    color: var(--brand-dark) !important;
+    font-family: "Frank Ruhl Libre", serif;
 }
 
 :root {
