@@ -16,7 +16,8 @@ cp docker-compose.unified.yml docker-compose.yml
 
 # Build and start new containers
 echo "🚀 Building and starting unified containers..."
-podman-compose up --build -d
+podman-compose build --no-cache
+podman-compose up -d
 
 echo "✅ Unified setup complete!"
 echo ""

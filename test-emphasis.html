@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Emphasis</title>
+    
+    <!-- Same font loading as main site -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: "Frank Ruhl Libre", serif;
+            font-size: 18px;
+            line-height: 1.6;
+            margin: 40px;
+            background: white;
+        }
+        
+        /* Test emphasis styles */
+        .text-highlight {
+            color: #64CADA !important;
+            font-weight: 600 !important;
+            font-family: "Frank Ruhl Libre", serif;
+            background: rgba(100, 202, 218, 0.1);
+            padding: 2px 4px;
+        }
+
+        .text-strong {
+            font-weight: 700 !important;
+            color: #935CC0 !important;
+            font-family: "Frank Ruhl Libre", serif;
+            background: rgba(147, 92, 192, 0.1);
+            padding: 2px 4px;
+        }
+
+        .text-accent {
+            color: #2298A9 !important;
+            font-weight: 600 !important;
+            font-family: "Frank Ruhl Libre", serif;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            background: rgba(34, 152, 169, 0.1);
+            padding: 2px 4px;
+        }
+
+        .method-highlight {
+            background: linear-gradient(120deg, rgba(100, 202, 218, 0.15) 0%, rgba(100, 202, 218, 0.15) 100%) !important;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600 !important;
+            color: #2298A9 !important;
+            font-family: "Frank Ruhl Libre", serif;
+        }
+        
+        /* Test different font weights */
+        .test-400 { font-weight: 400; }
+        .test-500 { font-weight: 500; }
+        .test-600 { font-weight: 600; }
+        .test-700 { font-weight: 700; }
+        
+        .debug-info {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test des Styles d'Emphase</h1>
+    
+    <h2>Test avec Classes Personnalisées</h2>
+    <p>Texte normal avec <span class="text-highlight">surbrillance bleue</span> et <span class="text-strong">texte fort violet</span>.</p>
+    <p>Voici un <span class="text-accent">accent sombre</span> et une <span class="method-highlight">méthode en surbrillance</span>.</p>
+    
+    <h2>Test des Poids de Police</h2>
+    <p>Font-weight 400 (normal): <span class="test-400">Ce texte devrait être normal</span></p>
+    <p>Font-weight 500 (medium): <span class="test-500">Ce texte devrait être medium</span></p>
+    <p>Font-weight 600 (semi-bold): <span class="test-600">Ce texte devrait être semi-bold</span></p>
+    <p>Font-weight 700 (bold): <span class="test-700">Ce texte devrait être bold</span></p>
+    
+    <h2>Comparaison HTML vs CSS</h2>
+    <p>HTML bold: <strong>Ce texte utilise &lt;strong&gt;</strong></p>
+    <p>CSS bold: <span style="font-weight: 700;">Ce texte utilise font-weight: 700</span></p>
+    <p>Notre classe: <span class="text-strong">Ce texte utilise .text-strong</span></p>
+    
+    <div class="debug-info">
+        <h3>Informations de Debug</h3>
+        <p><strong>Police détectée:</strong> <span id="font-family"></span></p>
+        <p><strong>Test de chargement des polices:</strong> <span id="font-test"></span></p>
+    </div>
+    
+    <script>
+        // Check what font is actually being used
+        const body = document.body;
+        const computedStyle = window.getComputedStyle(body);
+        document.getElementById('font-family').textContent = computedStyle.fontFamily;
+        
+        // Test font loading
+        document.fonts.ready.then(function() {
+            const testSpan = document.getElementById('font-test');
+            testSpan.textContent = 'Polices chargées avec succès!';
+            testSpan.style.color = 'green';
+        }).catch(function() {
+            const testSpan = document.getElementById('font-test');
+            testSpan.textContent = 'Erreur de chargement des polices';
+            testSpan.style.color = 'red';
+        });
+    </script>
+</body>
+</html>
