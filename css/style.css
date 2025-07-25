@@ -10,33 +10,45 @@ input, textarea, select, button {
     font-family: "Frank Ruhl Libre", serif;
 }
 
-/* Text Emphasis Styles - Enhanced specificity and styling */
+/* Text Emphasis Styles - Maximum specificity to override Bootstrap */
+span.text-highlight,
+p .text-highlight,
+div .text-highlight,
 .text-highlight {
-    color: var(--brand) !important;
+    color: #64CADA !important;
     font-weight: 600 !important;
-    font-family: "Frank Ruhl Libre", serif;
+    font-family: "Frank Ruhl Libre", serif !important;
 }
 
+span.text-strong,
+p .text-strong,
+div .text-strong,
 .text-strong {
     font-weight: 700 !important;
-    color: var(--comp) !important;
-    font-family: "Frank Ruhl Libre", serif;
+    color: #935CC0 !important;
+    font-family: "Frank Ruhl Libre", serif !important;
 }
 
+span.text-accent,
+p .text-accent,
+div .text-accent,
 .text-accent {
-    color: var(--brand-dark) !important;
+    color: #2298A9 !important;
     font-weight: 600 !important;
-    font-family: "Frank Ruhl Libre", serif;
+    font-family: "Frank Ruhl Libre", serif !important;
     text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
+span.method-highlight,
+p .method-highlight,
+div .method-highlight,
 .method-highlight {
     background: linear-gradient(120deg, rgba(100, 202, 218, 0.15) 0%, rgba(100, 202, 218, 0.15) 100%) !important;
     padding: 2px 6px;
     border-radius: 4px;
     font-weight: 600 !important;
-    color: var(--brand-dark) !important;
-    font-family: "Frank Ruhl Libre", serif;
+    color: #2298A9 !important;
+    font-family: "Frank Ruhl Libre", serif !important;
 }
 
 :root {
