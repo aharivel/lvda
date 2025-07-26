@@ -481,28 +481,33 @@ p {
 }
 
 .polaroid {
-        position: relative;
-        width: 320px;  /* Increased from 220px for better visibility */
-        max-width: 100%; /* Ensure responsiveness */
+    position: relative;
+    width: 280px;  /* Optimized for layout alignment */
+    max-width: 100%; /* Ensure responsiveness */
+    margin: 0 auto; /* Center in column */
+    display: inline-block;
 }
 
 .polaroid img {
-    border: 15px solid #fff;  /* Increased border for proportional scaling */
-    border-bottom: 60px solid #fff;  /* Increased bottom border */
-    -webkit-box-shadow: 4px 4px 8px rgba(119, 119, 119, 0.3);
-    -moz-box-shadow: 4px 4px 8px rgba(119, 119, 119, 0.3);
-    box-shadow: 4px 4px 8px rgba(119, 119, 119, 0.3);  /* Enhanced shadow */
+    border: 12px solid #fff;  /* Proportional border */
+    border-bottom: 45px solid #fff;  /* Space for caption */
+    -webkit-box-shadow: 0 4px 12px rgba(119, 119, 119, 0.25);
+    -moz-box-shadow: 0 4px 12px rgba(119, 119, 119, 0.25);
+    box-shadow: 0 4px 12px rgba(119, 119, 119, 0.25);  /* Softer shadow */
     width: 100%;  /* Make image fill container */
     height: auto; /* Maintain aspect ratio */
+    border-radius: 2px; /* Slight rounding for modern look */
 }
 
 .polaroid p {
     position: absolute;
     text-align: center;
     width: 100%;
-    bottom: 8px;  /* Adjusted for larger border */
-    font: 400 22px/1 'Kaushan Script', cursive;  /* Increased font size */
-    color: #888;
+    bottom: 6px;  /* Adjusted for border */
+    font: 400 18px/1 'Kaushan Script', cursive;  /* Balanced font size */
+    color: #666;
+    margin: 0;
+    left: 0;
 }
 
 
@@ -944,11 +949,11 @@ input.form-control {
     
     /* Mobile polaroid sizing */
     .polaroid {
-        width: 280px;  /* Slightly smaller on mobile but still larger than original */
+        width: 240px;  /* Optimized for mobile */
     }
     
     .polaroid p {
-        font: 400 20px/1 'Kaushan Script', cursive;  /* Adjusted font size for mobile */
+        font: 400 16px/1 'Kaushan Script', cursive;  /* Adjusted font size for mobile */
     }
 }
 
