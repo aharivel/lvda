@@ -304,12 +304,12 @@
         <div class="row gy-4">
             <div class="col-lg-6 col-md-6 col-12">
                 <div class="text-center">
-                    <img src="./img/tarif1.png" alt="Tarifs Comportementalisme et Education" class="img-fluid" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    <img src="./img/tarif1.png" alt="Tarifs Comportementalisme et Education" class="img-fluid tarif-image" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s ease;" data-bs-toggle="modal" data-bs-target="#tarifModal1" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-12">
                 <div class="text-center">
-                    <img src="./img/tarifs2.png" alt="Tarifs Pension et Autres Services" class="img-fluid" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    <img src="./img/tarifs2.png" alt="Tarifs Pension et Autres Services" class="img-fluid tarif-image" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s ease;" data-bs-toggle="modal" data-bs-target="#tarifModal2" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                 </div>
             </div>
         </div>
@@ -398,6 +398,37 @@
         </div>
     </div>
 </footer>
+
+<!-- TARIFS MODALS -->
+<!-- Modal for tarif1.png -->
+<div class="modal fade" id="tarifModal1" tabindex="-1" aria-labelledby="tarifModal1Label" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tarifModal1Label">Tarifs - Comportementalisme et Éducation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="./img/tarif1.png" alt="Tarifs Comportementalisme et Education" class="img-fluid" style="max-width: 100%; height: auto;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for tarifs2.png -->
+<div class="modal fade" id="tarifModal2" tabindex="-1" aria-labelledby="tarifModal2Label" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tarifModal2Label">Tarifs - Pension et Autres Services</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="./img/tarifs2.png" alt="Tarifs Pension et Autres Services" class="img-fluid" style="max-width: 100%; height: auto;">
+            </div>
+        </div>
+    </div>
+</div>
       
 <script src="./js/jquery.min.js"></script>
 <script src="./js/bootstrap.bundle.min.js"></script>
