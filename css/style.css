@@ -422,6 +422,20 @@ p {
     font-weight: 700;
 }
 
+/* Social media icons in navbar */
+.navbar .navbar-nav .social-nav-link {
+    padding: 0.5rem !important;
+    margin: 0 0.25rem;
+    font-size: 1.2rem;
+    color: var(--dark);
+    transition: all 0.3s ease;
+}
+
+.navbar .navbar-nav .social-nav-link:hover {
+    color: var(--brand);
+    transform: translateY(-2px);
+}
+
 .navbar-brand {
     font-family: "Frank Ruhl Libre", serif;
     font-size: var(--font-2xl);
