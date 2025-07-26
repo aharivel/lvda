@@ -1,20 +1,44 @@
 #!/bin/bash
 
+# Detect container runtime (Docker or Podman)
+# Check Podman first since it runs rootless and is more likely to work
+if command -v podman &> /dev/null && command -v podman-compose &> /dev/null; then
+    CONTAINER_CMD="podman"
+    COMPOSE_CMD="podman-compose"
+    echo "🦭 Using Podman"
+elif command -v docker &> /dev/null && command -v docker-compose &> /dev/null; then
+    # Test if Docker daemon is accessible
+    if docker info >/dev/null 2>&1; then
+        CONTAINER_CMD="docker"
+        COMPOSE_CMD="docker-compose"
+        echo "🐳 Using Docker"
+    else
+        echo "❌ Docker found but daemon not accessible (permission denied)"
+        echo "💡 Try adding your user to the docker group: sudo usermod -aG docker $USER"
+        echo "💡 Or install Podman for rootless containers"
+        exit 1
+    fi
+else
+    echo "❌ Neither Docker nor Podman with compose found!"
+    echo "Please install Docker + docker-compose or Podman + podman-compose"
+    exit 1
+fi
+
 echo "🔄 Switching to unified container setup with complete cleanup..."
 
 # Stop and remove all containers
 echo "📦 Stopping and removing all containers..."
-podman-compose down --volumes --remove-orphans
+$COMPOSE_CMD down --volumes --remove-orphans
 
-# Clean up Docker/Podman cache and images
+# Clean up cache and images
 echo "🧹 Cleaning up containers, images, and cache..."
-podman system prune -f
-podman image prune -f
-podman volume prune -f
+$CONTAINER_CMD system prune -f
+$CONTAINER_CMD image prune -f
+$CONTAINER_CMD volume prune -f
 
 # Remove any existing images for this project
 echo "🗑️ Removing existing project images..."
-podman images | grep lvda | awk '{print $3}' | xargs -r podman rmi -f
+$CONTAINER_CMD images | grep lvda | awk '{print $3}' | xargs -r $CONTAINER_CMD rmi -f
 
 # Backup current docker-compose
 echo "💾 Backing up current docker-compose.yml..."
@@ -26,8 +50,8 @@ cp docker-compose.unified.yml docker-compose.yml
 
 # Build and start new containers with complete rebuild
 echo "🚀 Building and starting unified containers (complete rebuild)..."
-podman-compose build --no-cache --pull
-podman-compose up -d
+$COMPOSE_CMD build --no-cache --pull
+$COMPOSE_CMD up -d
 
 echo "✅ Unified setup complete!"
 echo ""
