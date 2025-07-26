@@ -1010,6 +1010,16 @@ input.form-control {
     }
 }
 
+/* Desktop navbar logo sizing */
+@media (min-width: 992px) {
+    .navbar-brand img {
+        width: 180px !important;
+        height: auto !important;
+        display: block !important;
+        max-width: 100% !important;
+    }
+}
+
 /* Improved Section Styling */
 .intro {
     margin-bottom: 3rem;
