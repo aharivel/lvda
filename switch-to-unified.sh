@@ -1,10 +1,20 @@
 #!/bin/bash
 
-echo "🔄 Switching to unified container setup..."
+echo "🔄 Switching to unified container setup with complete cleanup..."
 
-# Stop current containers
-echo "📦 Stopping current containers..."
-podman-compose down
+# Stop and remove all containers
+echo "📦 Stopping and removing all containers..."
+podman-compose down --volumes --remove-orphans
+
+# Clean up Docker/Podman cache and images
+echo "🧹 Cleaning up containers, images, and cache..."
+podman system prune -f
+podman image prune -f
+podman volume prune -f
+
+# Remove any existing images for this project
+echo "🗑️ Removing existing project images..."
+podman images | grep lvda | awk '{print $3}' | xargs -r podman rmi -f
 
 # Backup current docker-compose
 echo "💾 Backing up current docker-compose.yml..."
@@ -14,9 +24,9 @@ cp docker-compose.yml docker-compose.yml.backup
 echo "🔧 Switching to unified configuration..."
 cp docker-compose.unified.yml docker-compose.yml
 
-# Build and start new containers
-echo "🚀 Building and starting unified containers..."
-podman-compose build --no-cache
+# Build and start new containers with complete rebuild
+echo "🚀 Building and starting unified containers (complete rebuild)..."
+podman-compose build --no-cache --pull
 podman-compose up -d
 
 echo "✅ Unified setup complete!"
