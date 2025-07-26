@@ -349,6 +349,13 @@ p {
     background-repeat: no-repeat;
 }
 
+.slide4 {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(../img/pension-slider.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 .slide .display-3 {
     text-transform: uppercase;
     color: #fff;
