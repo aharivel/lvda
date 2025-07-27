@@ -24,6 +24,13 @@ RUN cp *.html /usr/share/nginx/html/ && \
     cp -r img/ /usr/share/nginx/html/ && \
     cp -r vendor/ /usr/share/nginx/html/
 
+# Debug: Check what carousel images are actually present
+RUN echo "=== CAROUSEL IMAGE DEBUG ===" && \
+    ls -la /usr/share/nginx/html/img/balade* || echo "No balade images found" && \
+    ls -la /usr/share/nginx/html/img/pension* || echo "No pension images found" && \
+    ls -la /usr/share/nginx/html/img/diapo* || echo "No diapo images found" && \
+    echo "=== END DEBUG ==="
+
 # Copy admin panel files from cloned repo
 RUN cp -r admin/public/ /usr/share/nginx/html/admin/
 
