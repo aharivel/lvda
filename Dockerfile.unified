@@ -1,20 +1,30 @@
 FROM nginx:alpine
 
-# Copy nginx configuration
-COPY nginx-unified.conf /etc/nginx/nginx.conf
+# Install git and curl for cloning and health checks
+RUN apk add --no-cache git curl
 
 # Create directory structure
 RUN mkdir -p /usr/share/nginx/html/admin /var/run/nginx
 
-# Copy main website files
-COPY *.html /usr/share/nginx/html/
-COPY css/ /usr/share/nginx/html/css/
-COPY js/ /usr/share/nginx/html/js/
-COPY img/ /usr/share/nginx/html/img/
-COPY vendor/ /usr/share/nginx/html/vendor/
+# Clone the repository directly to get exact file state
+WORKDIR /tmp
+RUN git clone --branch feature/claude-improvements https://github.com/aharivel/lvda.git repo
 
-# Copy admin panel files
-COPY admin/public/ /usr/share/nginx/html/admin/
+# Copy nginx configuration from the cloned repo
+RUN cp /tmp/repo/website/lvda/nginx-unified.conf /etc/nginx/nginx.conf
+
+# Copy main website files from cloned repo
+RUN cp /tmp/repo/website/lvda/*.html /usr/share/nginx/html/ && \
+    cp -r /tmp/repo/website/lvda/css/ /usr/share/nginx/html/ && \
+    cp -r /tmp/repo/website/lvda/js/ /usr/share/nginx/html/ && \
+    cp -r /tmp/repo/website/lvda/img/ /usr/share/nginx/html/ && \
+    cp -r /tmp/repo/website/lvda/vendor/ /usr/share/nginx/html/
+
+# Copy admin panel files from cloned repo
+RUN cp -r /tmp/repo/website/lvda/admin/public/ /usr/share/nginx/html/admin/
+
+# Clean up git repository to reduce image size
+RUN rm -rf /tmp/repo
 
 # Create basic auth file for admin (username: admin, password: admin123)
 # In production, use a stronger password and proper secret management
