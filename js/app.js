@@ -284,6 +284,7 @@ try {
                 $spinner.addClass('d-none');
             }
         });
+    });
         
         } catch (innerError) {
             console.error('🟣 APP.JS: Error inside document ready:', innerError);
