@@ -454,11 +454,14 @@ p {
     font-weight: 700;
 }
 
+/* CRITICAL FIX: Maximum specificity for navbar logo */
+.navbar .navbar-brand img,
 .navbar-brand img {
     width: 170px !important; /* Fixed size - no variables */
     height: auto !important;
     max-width: 100% !important;
     display: block !important;
+    min-width: 170px !important; /* Prevent collapse to 0px */
 }
 
 .navbar-brand .dot {
@@ -1022,11 +1025,13 @@ input.form-control {
 
 /* Large tablets to small desktop (992px - 1199px) */
 @media (min-width: 992px) and (max-width: 1199px) {
+    .navbar .navbar-brand img,
     .navbar-brand img {
         width: 160px !important;
         height: auto !important;
         display: block !important;
         max-width: 100% !important;
+        min-width: 160px !important;
     }
     
     .navbar .navbar-nav .nav-link {
@@ -1038,11 +1043,13 @@ input.form-control {
 
 /* Desktop and larger (1200px+) */
 @media (min-width: 1200px) {
+    .navbar .navbar-brand img,
     .navbar-brand img {
         width: 180px !important;
         height: auto !important;
         display: block !important;
         max-width: 100% !important;
+        min-width: 180px !important;
     }
     
     .navbar .navbar-nav .nav-link {
