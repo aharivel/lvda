@@ -406,21 +406,20 @@ p {
 }
 
 .navbar .navbar-nav .nav-link {
-    font-family: "Frank Ruhl Libre", serif !important;
+    font-family: "Frank Ruhl Libre", serif;
     color: var(--dark);
-    padding-right: 1.5rem !important;
-    padding-left: 0.5rem !important;
-    font-size: 16px !important; /* Remove CSS variables completely */
-    font-weight: 600 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.3px !important;
+    padding-right: 3.5rem;
+    font-size: var(--font-lg);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     transition: all 0.3s ease;
 }
 
 .navbar .navbar-nav .nav-link.contact-btn {
-    padding: 0.75rem 1.2rem;
-    margin-left: 0.5rem;
-    font-size: var(--font-sm);
+    padding: 0.75rem 1.5rem;
+    padding-right: 1.5rem;
+    margin-left: 1rem;
 }
 
 .navbar .navbar-nav .nav-link:hover {
@@ -959,9 +958,8 @@ input.form-control {
     }
     
     .navbar .navbar-nav .nav-link {
-        font-size: 14px !important; /* Fixed mobile size */
-        padding-right: 0.5rem !important;
-        padding-left: 0.5rem !important;
+        font-size: var(--font-base);
+        padding-right: 1rem;
     }
     
     .navbar-brand img {
@@ -993,9 +991,7 @@ input.form-control {
 
 @media (min-width: 768px) and (max-width: 991px) {
     .navbar .navbar-nav .nav-link {
-        padding-right: 1rem !important;
-        padding-left: 0.5rem !important;
-        font-size: 15px !important; /* Fixed tablet size */
+        padding-right: 2rem;
     }
     
     .navbar-brand img {
@@ -1025,11 +1021,6 @@ input.form-control {
         min-width: 160px !important;
     }
     
-    .navbar .navbar-nav .nav-link {
-        font-size: 15px !important; /* Fixed large tablet size */
-        padding-right: 1rem !important;
-        padding-left: 0.5rem !important;
-    }
 }
 
 /* Desktop and larger (1200px+) */
@@ -1043,11 +1034,6 @@ input.form-control {
         min-width: 180px !important;
     }
     
-    .navbar .navbar-nav .nav-link {
-        font-size: 16px !important; /* Fixed desktop size */
-        padding-right: 1.5rem !important;
-        padding-left: 0.5rem !important;
-    }
 }
 
 /* Improved Section Styling */
