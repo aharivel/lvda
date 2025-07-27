@@ -131,7 +131,8 @@ h6, .h6 { font-size: var(--font-base); }
     background-repeat: no-repeat;
 }
 
-img {
+/* Global img rule - excludes navbar brand images */
+img:not(.navbar-brand img):not(.navbar .navbar-brand img) {
     width: 100%;
 }
 
@@ -454,14 +455,19 @@ p {
     font-weight: 700;
 }
 
-/* CRITICAL FIX: Maximum specificity for navbar logo */
+/* ULTIMATE FIX: Override ALL conflicts including global img rule */
+.navbar .navbar-brand img[src*="new-logo"],
+.navbar .navbar-brand img[alt*="La Voix des Animaux"],
 .navbar .navbar-brand img,
+.navbar-brand img[src*="new-logo"],
+.navbar-brand img[alt*="La Voix des Animaux"],
 .navbar-brand img {
     width: 170px !important; /* Fixed size - no variables */
     height: auto !important;
-    max-width: 100% !important;
+    max-width: none !important; /* Override global width: 100% */
     display: block !important;
     min-width: 170px !important; /* Prevent collapse to 0px */
+    box-sizing: border-box !important;
 }
 
 .navbar-brand .dot {
