@@ -1070,8 +1070,10 @@ input.form-control {
 
 /* =======================================================================
    FINAL CASCADE FIX: NAVBAR LOGO SIZING
-   This MUST come at the very end to override all media query rules above
+   This MUST come at the very end to override all Bootstrap/Owl Carousel global img rules
    ======================================================================= */
+   
+/* Override Bootstrap's .img-fluid and global img rules for navbar logo */
 .navbar .navbar-brand img[src*="new-logo"],
 .navbar .navbar-brand img[alt*="La Voix des Animaux"],
 .navbar .navbar-brand img.d-inline-block,
@@ -1080,10 +1082,14 @@ input.form-control {
 .navbar-brand img[alt*="La Voix des Animaux"],
 .navbar-brand img.d-inline-block,
 .navbar-brand img {
-    width: 170px !important; /* Fixed size - no variables */
+    width: 170px !important; /* Fixed size - override Bootstrap's width: 100% */
     height: auto !important;
-    max-width: none !important; /* Override ALL previous max-width: 100% rules */
+    max-width: none !important; /* Override Bootstrap's max-width: 100% */
     display: block !important;
     min-width: 170px !important; /* Prevent collapse to 0px */
     box-sizing: border-box !important;
+    
+    /* Additional overrides for any global img rules */
+    flex-shrink: 0 !important; /* Prevent shrinking in flex containers */
+    object-fit: contain !important; /* Maintain aspect ratio */
 }
