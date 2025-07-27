@@ -1023,7 +1023,7 @@ input.form-control {
         width: 160px !important;
         height: auto !important;
         display: block !important;
-        max-width: 100% !important;
+        max-width: none !important; /* FIXED: Override global width: 100% */
         min-width: 160px !important;
     }
     
@@ -1041,7 +1041,7 @@ input.form-control {
         width: 180px !important;
         height: auto !important;
         display: block !important;
-        max-width: 100% !important;
+        max-width: none !important; /* FIXED: Override global width: 100% */
         min-width: 180px !important;
     }
     
