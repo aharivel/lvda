@@ -515,12 +515,40 @@
 <script>
 console.log('🔴 INLINE SCRIPT TEST: JavaScript execution works!');
 alert('🔴 INLINE TEST: Basic JavaScript is working! URL: ' + window.location.href);
+
+// Test jQuery loading
+window.addEventListener('load', function() {
+    console.log('🟡 WINDOW LOADED EVENT FIRED');
+    console.log('🟡 jQuery available?', typeof $ !== 'undefined');
+    console.log('🟡 jQuery version:', typeof $ !== 'undefined' ? $.fn.jquery : 'Not loaded');
+    
+    if (typeof $ === 'undefined') {
+        console.error('❌ jQuery is NOT loaded!');
+        alert('❌ EXTERNAL SCRIPTS FAILED: jQuery did not load!');
+    } else {
+        console.log('✅ jQuery is loaded successfully');
+        alert('✅ EXTERNAL SCRIPTS OK: jQuery loaded successfully!');
+    }
+});
+
+// Check script loading events
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🟢 DOM CONTENT LOADED');
+});
 </script>
 
-<script src="./js/jquery.min.js"></script>
-<script src="./js/bootstrap.bundle.min.js"></script>
-<script src="./js/owl.carousel.min.js"></script>
-<script src="./js/app.js"></script>
+<script src="./js/jquery.min.js" 
+        onload="console.log('✅ jQuery script loaded successfully')" 
+        onerror="console.error('❌ jQuery script failed to load')"></script>
+<script src="./js/bootstrap.bundle.min.js"
+        onload="console.log('✅ Bootstrap script loaded successfully')" 
+        onerror="console.error('❌ Bootstrap script failed to load')"></script>
+<script src="./js/owl.carousel.min.js"
+        onload="console.log('✅ Owl Carousel script loaded successfully')" 
+        onerror="console.error('❌ Owl Carousel script failed to load')"></script>
+<script src="./js/app.js"
+        onload="console.log('✅ App.js script loaded successfully')" 
+        onerror="console.error('❌ App.js script failed to load')"></script>
 </body>
 
 </html>
