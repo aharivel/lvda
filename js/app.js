@@ -1,6 +1,107 @@
 
 
 $(document).ready(function () {
+    // Navbar Debug Function
+    function debugNavbar() {
+        console.log('🔍 NAVBAR DEBUG ANALYSIS');
+        console.log('========================');
+        
+        const navbar = document.querySelector('.navbar');
+        const navbarBrand = document.querySelector('.navbar-brand');
+        const navbarBrandImg = document.querySelector('.navbar-brand img');
+        const navLinks = document.querySelectorAll('.navbar .navbar-nav .nav-link');
+        
+        if (navbar) {
+            console.log('📏 NAVBAR CONTAINER:');
+            console.log('  Width:', navbar.offsetWidth + 'px');
+            console.log('  Height:', navbar.offsetHeight + 'px');
+            console.log('  Display:', window.getComputedStyle(navbar).display);
+            console.log('  Position:', window.getComputedStyle(navbar).position);
+        }
+        
+        if (navbarBrand) {
+            console.log('🏷️ NAVBAR BRAND:');
+            console.log('  Width:', navbarBrand.offsetWidth + 'px');
+            console.log('  Height:', navbarBrand.offsetHeight + 'px');
+            console.log('  Font Size:', window.getComputedStyle(navbarBrand).fontSize);
+            console.log('  Font Weight:', window.getComputedStyle(navbarBrand).fontWeight);
+        }
+        
+        if (navbarBrandImg) {
+            console.log('🖼️ NAVBAR LOGO:');
+            console.log('  Width:', navbarBrandImg.offsetWidth + 'px');
+            console.log('  Height:', navbarBrandImg.offsetHeight + 'px');
+            console.log('  Natural Width:', navbarBrandImg.naturalWidth + 'px');
+            console.log('  Natural Height:', navbarBrandImg.naturalHeight + 'px');
+            console.log('  CSS Width:', window.getComputedStyle(navbarBrandImg).width);
+            console.log('  CSS Height:', window.getComputedStyle(navbarBrandImg).height);
+            console.log('  Display:', window.getComputedStyle(navbarBrandImg).display);
+            console.log('  Max Width:', window.getComputedStyle(navbarBrandImg).maxWidth);
+            console.log('  Visibility:', window.getComputedStyle(navbarBrandImg).visibility);
+            console.log('  Opacity:', window.getComputedStyle(navbarBrandImg).opacity);
+        }
+        
+        console.log('🔗 NAV LINKS (' + navLinks.length + ' found):');
+        navLinks.forEach((link, index) => {
+            const computedStyle = window.getComputedStyle(link);
+            console.log('  Link ' + (index + 1) + ' (' + link.textContent.trim() + '):');
+            console.log('    Font Size:', computedStyle.fontSize);
+            console.log('    Font Weight:', computedStyle.fontWeight);
+            console.log('    Font Family:', computedStyle.fontFamily);
+            console.log('    Padding Left:', computedStyle.paddingLeft);
+            console.log('    Padding Right:', computedStyle.paddingRight);
+            console.log('    Color:', computedStyle.color);
+            console.log('    Display:', computedStyle.display);
+        });
+        
+        console.log('📱 VIEWPORT INFO:');
+        console.log('  Window Width:', window.innerWidth + 'px');
+        console.log('  Window Height:', window.innerHeight + 'px');
+        console.log('  Document Width:', document.documentElement.offsetWidth + 'px');
+        console.log('  User Agent:', navigator.userAgent);
+        
+        console.log('🎨 ACTIVE CSS RULES:');
+        const navLinkStyle = window.getComputedStyle(document.querySelector('.navbar .navbar-nav .nav-link'));
+        console.log('  Main nav-link font-size:', navLinkStyle.fontSize);
+        console.log('  Main nav-link computed font-family:', navLinkStyle.fontFamily);
+        
+        // Check for CSS variables
+        const rootStyles = window.getComputedStyle(document.documentElement);
+        console.log('🔧 CSS VARIABLES:');
+        console.log('  --font-base:', rootStyles.getPropertyValue('--font-base') || 'not defined');
+        console.log('  --font-sm:', rootStyles.getPropertyValue('--font-sm') || 'not defined');
+        console.log('  --font-md:', rootStyles.getPropertyValue('--font-md') || 'not defined');
+        
+        // Environment detection
+        console.log('🌍 ENVIRONMENT:');
+        console.log('  Protocol:', window.location.protocol);
+        console.log('  Host:', window.location.host);
+        console.log('  URL:', window.location.href);
+        
+        console.log('========================');
+    }
+    
+    // Run debug immediately
+    debugNavbar();
+    
+    // Run debug again after window resize to see responsive changes
+    let resizeTimeout;
+    $(window).on('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function() {
+            console.log('🔄 RESIZE EVENT - Running navbar debug...');
+            debugNavbar();
+        }, 300);
+    });
+    
+    // Run debug when fonts are loaded
+    if (document.fonts) {
+        document.fonts.ready.then(function() {
+            console.log('✅ FONTS LOADED - Running navbar debug...');
+            setTimeout(debugNavbar, 100);
+        });
+    }
+
     //Owl
     $('.hero-slider').owlCarousel({
         loop: true,
