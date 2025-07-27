@@ -409,7 +409,7 @@ p {
     font-family: "Frank Ruhl Libre", serif;
     color: var(--dark);
     padding-right: 3.5rem;
-    font-size: var(--font-lg);
+    font-size: var(--font-base);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
