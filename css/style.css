@@ -455,20 +455,7 @@ p {
     font-weight: 700;
 }
 
-/* ULTIMATE FIX: Override ALL conflicts including global img rule */
-.navbar .navbar-brand img[src*="new-logo"],
-.navbar .navbar-brand img[alt*="La Voix des Animaux"],
-.navbar .navbar-brand img,
-.navbar-brand img[src*="new-logo"],
-.navbar-brand img[alt*="La Voix des Animaux"],
-.navbar-brand img {
-    width: 170px !important; /* Fixed size - no variables */
-    height: auto !important;
-    max-width: none !important; /* Override global width: 100% */
-    display: block !important;
-    min-width: 170px !important; /* Prevent collapse to 0px */
-    box-sizing: border-box !important;
-}
+/* MOVED TO END OF FILE - This rule was being overridden by media queries below */
 
 .navbar-brand .dot {
     color: var(--brand);
@@ -1092,4 +1079,22 @@ input.form-control {
     width: 60px;
     height: 3px;
     background-color: var(--brand);
+}
+
+/* =======================================================================
+   FINAL CASCADE FIX: NAVBAR LOGO SIZING
+   This MUST come at the very end to override all media query rules above
+   ======================================================================= */
+.navbar .navbar-brand img[src*="new-logo"],
+.navbar .navbar-brand img[alt*="La Voix des Animaux"],
+.navbar .navbar-brand img,
+.navbar-brand img[src*="new-logo"],
+.navbar-brand img[alt*="La Voix des Animaux"],
+.navbar-brand img {
+    width: 170px !important; /* Fixed size - no variables */
+    height: auto !important;
+    max-width: none !important; /* Override ALL previous max-width: 100% rules */
+    display: block !important;
+    min-width: 170px !important; /* Prevent collapse to 0px */
+    box-sizing: border-box !important;
 }
