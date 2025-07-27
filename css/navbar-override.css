@@ -1,0 +1,36 @@
+/* 
+ * CRITICAL NAVBAR LOGO OVERRIDE
+ * This file loads LAST to override ALL Bootstrap/Owl Carousel global img rules
+ * Must be loaded after all other CSS files
+ */
+
+/* ULTRA HIGH SPECIFICITY - Override ANY global img rules from Bootstrap/Owl */
+html body .navbar .navbar-brand img[src*="new-logo"],
+html body .navbar .navbar-brand img[alt*="La Voix des Animaux"],
+html body .navbar .navbar-brand img.d-inline-block,
+html body .navbar .navbar-brand img,
+html body .navbar-brand img[src*="new-logo"],
+html body .navbar-brand img[alt*="La Voix des Animaux"],
+html body .navbar-brand img.d-inline-block,
+html body .navbar-brand img {
+    width: 170px !important; 
+    height: auto !important;
+    max-width: none !important; 
+    display: block !important;
+    min-width: 170px !important; 
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important; 
+    object-fit: contain !important;
+}
+
+/* Even more specific - target by position in DOM */
+.navbar:first-of-type .navbar-brand:first-child img {
+    width: 170px !important;
+    max-width: none !important;
+}
+
+/* Nuclear option - target img inside any navbar */
+.navbar img[src*="new-logo"] {
+    width: 170px !important;
+    max-width: none !important;
+}
