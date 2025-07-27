@@ -80,7 +80,7 @@ div .method-highlight,
 body {
     font-family: "Frank Ruhl Libre", serif;
     color: var(--body);
-    font-size: var(--font-base);
+    font-size: 16px; /* Match local testing behavior - smaller than var(--font-base) */
     line-height: var(--line-normal);
     /*background-color: aliceblue;*/
 }
