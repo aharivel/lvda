@@ -1,4 +1,4 @@
-FROM nginx:1.24-alpine3.18
+FROM nginx:1.28-alpine
 
 # Install git and curl for cloning and health checks - use consistent Alpine package versions
 RUN apk add --no-cache git curl
