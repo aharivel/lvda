@@ -409,13 +409,12 @@ p {
 .navbar .navbar-nav .nav-link {
     font-family: "Frank Ruhl Libre", serif !important;
     color: var(--dark);
-    padding-right: 1.5rem;
-    padding-left: 0.5rem;
-    font-size: var(--font-base) !important;
-    font-size: 1.125rem !important; /* Fallback for CSS var issues */
+    padding-right: 1.5rem !important;
+    padding-left: 0.5rem !important;
+    font-size: 16px !important; /* Remove CSS variables completely */
     font-weight: 600 !important;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
+    text-transform: uppercase !important;
+    letter-spacing: 0.3px !important;
     transition: all 0.3s ease;
 }
 
@@ -456,7 +455,7 @@ p {
 }
 
 .navbar-brand img {
-    width: 160px !important; /* Safe default size */
+    width: 170px !important; /* Fixed size - no variables */
     height: auto !important;
     max-width: 100% !important;
     display: block !important;
@@ -966,10 +965,9 @@ input.form-control {
     }
     
     .navbar .navbar-nav .nav-link {
-        font-size: var(--font-sm) !important;
-        font-size: 1rem !important; /* Fallback for CSS var issues */
-        padding-right: 0.5rem;
-        padding-left: 0.5rem;
+        font-size: 14px !important; /* Fixed mobile size */
+        padding-right: 0.5rem !important;
+        padding-left: 0.5rem !important;
     }
     
     .navbar-brand img {
@@ -1001,10 +999,9 @@ input.form-control {
 
 @media (min-width: 768px) and (max-width: 991px) {
     .navbar .navbar-nav .nav-link {
-        padding-right: 1rem;
-        padding-left: 0.5rem;
-        font-size: var(--font-sm) !important;
-        font-size: 1rem !important; /* Fallback for CSS var issues */
+        padding-right: 1rem !important;
+        padding-left: 0.5rem !important;
+        font-size: 15px !important; /* Fixed tablet size */
     }
     
     .navbar-brand img {
@@ -1033,10 +1030,9 @@ input.form-control {
     }
     
     .navbar .navbar-nav .nav-link {
-        font-size: var(--font-sm) !important;
-        font-size: 1rem !important; /* Fallback for CSS var issues */
-        padding-right: 1rem;
-        padding-left: 0.5rem;
+        font-size: 15px !important; /* Fixed large tablet size */
+        padding-right: 1rem !important;
+        padding-left: 0.5rem !important;
     }
 }
 
@@ -1050,10 +1046,9 @@ input.form-control {
     }
     
     .navbar .navbar-nav .nav-link {
-        font-size: var(--font-base) !important;
-        font-size: 1.125rem !important; /* Fallback for CSS var issues */
-        padding-right: 1.5rem;
-        padding-left: 0.5rem;
+        font-size: 16px !important; /* Fixed desktop size */
+        padding-right: 1.5rem !important;
+        padding-left: 0.5rem !important;
     }
 }
 
