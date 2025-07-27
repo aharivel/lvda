@@ -1,6 +1,18 @@
 
 
+// IMMEDIATE TEST - This should show before jQuery loads
+console.log('🚀 JAVASCRIPT FILE LOADED!');
+console.log('Environment URL:', window.location.href);
+console.log('Current time:', new Date().toISOString());
+
+// VISUAL CONFIRMATION - Remove this after testing
+alert('🔧 DEBUG: JavaScript is executing! Environment: ' + window.location.protocol + '//' + window.location.host);
+
 $(document).ready(function () {
+    // JQUERY READY TEST
+    console.log('✅ JQUERY READY FIRED!');
+    console.log('jQuery version:', $.fn.jquery);
+    
     // Navbar Debug Function
     function debugNavbar() {
         console.log('🔍 NAVBAR DEBUG ANALYSIS');
