@@ -204,7 +204,9 @@
             log('=== CAROUSEL DUMP ===');
             log(`Current slide: ${owlData.current()}`);
             log(`Total slides: ${owlData._items.length}`);
-            log(`Settings: ${JSON.stringify(owlData.settings, null, 2)}`);
+            log(`Loop setting: ${owlData.settings.loop}`);
+            log(`Items setting: ${owlData.settings.items}`);
+            log(`Autoplay setting: ${owlData.settings.autoplay}`);
             
             // Check each slide's computed styles
             $('.hero-slider .slide').each(function(index) {
@@ -253,14 +255,14 @@
                         dumpCarouselInfo();
                     },
                     onChanged: function(event) {
-                        log(`Slide changed from ${event.item.index} to ${event.page.index}`);
+                        log(`Slide changed from ${event.item ? event.item.index : 'null'} to ${event.page ? event.page.index : 'null'}`);
                         
-                        // Update info display
+                        // Update info display - avoid circular reference
                         document.getElementById('carousel-info').innerHTML = `
                             <div class="info">
-                                <strong>Current Slide:</strong> ${event.page.index}<br>
-                                <strong>Total Slides:</strong> ${event.item.count}<br>
-                                <strong>Event:</strong> ${JSON.stringify(event, null, 2)}
+                                <strong>Current Slide:</strong> ${event.page ? event.page.index : 'undefined'}<br>
+                                <strong>Total Slides:</strong> ${event.item ? event.item.count : 'undefined'}<br>
+                                <strong>Event Type:</strong> ${event.type || 'unknown'}
                             </div>
                         `;
                     }
