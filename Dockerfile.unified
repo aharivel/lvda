@@ -10,18 +10,21 @@ RUN mkdir -p /usr/share/nginx/html/admin /var/run/nginx
 WORKDIR /tmp
 RUN git clone --branch feature/claude-improvements https://github.com/aharivel/lvda.git repo
 
+# Set working directory to the cloned website files
+WORKDIR /tmp/repo/website/lvda
+
 # Copy nginx configuration from the cloned repo
-RUN cp /tmp/repo/website/lvda/nginx-unified.conf /etc/nginx/nginx.conf
+RUN cp nginx-unified.conf /etc/nginx/nginx.conf
 
 # Copy main website files from cloned repo
-RUN cp /tmp/repo/website/lvda/*.html /usr/share/nginx/html/ && \
-    cp -r /tmp/repo/website/lvda/css/ /usr/share/nginx/html/ && \
-    cp -r /tmp/repo/website/lvda/js/ /usr/share/nginx/html/ && \
-    cp -r /tmp/repo/website/lvda/img/ /usr/share/nginx/html/ && \
-    cp -r /tmp/repo/website/lvda/vendor/ /usr/share/nginx/html/
+RUN cp *.html /usr/share/nginx/html/ && \
+    cp -r css/ /usr/share/nginx/html/ && \
+    cp -r js/ /usr/share/nginx/html/ && \
+    cp -r img/ /usr/share/nginx/html/ && \
+    cp -r vendor/ /usr/share/nginx/html/
 
 # Copy admin panel files from cloned repo
-RUN cp -r /tmp/repo/website/lvda/admin/public/ /usr/share/nginx/html/admin/
+RUN cp -r admin/public/ /usr/share/nginx/html/admin/
 
 # Clean up git repository to reduce image size
 RUN rm -rf /tmp/repo
