@@ -17,6 +17,13 @@ $(document).ready(function () {
             768: {
                 nav: true,
             }
+        },
+        onInitialized: function(event) {
+            console.log('Carousel initialized successfully');
+        },
+        onChanged: function(event) {
+            // Avoid circular reference issues that prevent initialization
+            console.log('Slide changed to: ' + (event.page ? event.page.index : 'unknown'));
         }
     });
 
