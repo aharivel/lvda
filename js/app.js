@@ -1,20 +1,7 @@
 
 
-// IMMEDIATE TEST - This should show before jQuery loads
-console.log('🚀 APP.JS: File parsed successfully!');
-console.log('🚀 APP.JS: Environment URL:', window.location.href);
-console.log('🚀 APP.JS: Current time:', new Date().toISOString());
-
-// VISUAL CONFIRMATION - Remove this after testing
-alert('🟣 APP.JS EXECUTING: Our code inside app.js is running! Environment: ' + window.location.protocol + '//' + window.location.host);
-
-// Test if there's an error before document ready
-try {
-    console.log('🟣 APP.JS: About to set up document ready...');
-} catch (e) {
-    console.error('🟣 APP.JS: Error before document ready:', e);
-    alert('🟣 APP.JS ERROR: ' + e.message);
-}
+// IMMEDIATE TEST - This should show before jQuery loads  
+alert('🚨 IMMEDIATE: Top-level JavaScript executing in app.js!');
 
 try {
     console.log('🟣 APP.JS: Attempting to call jQuery document ready...');
