@@ -10,13 +10,8 @@ RUN mkdir -p /usr/share/nginx/html/admin /var/run/nginx
 WORKDIR /tmp
 RUN git clone --branch feature/claude-improvements https://github.com/aharivel/lvda.git repo
 
-# Debug: List the repository structure
-RUN ls -la /tmp/repo/
-RUN ls -la /tmp/repo/website/
-RUN ls -la /tmp/repo/website/lvda/
-
-# Set working directory to the cloned website files
-WORKDIR /tmp/repo/website/lvda
+# Set working directory to the cloned repository root (contains website files)
+WORKDIR /tmp/repo
 
 # Copy nginx configuration from the cloned repo
 RUN cp nginx-unified.conf /etc/nginx/nginx.conf
