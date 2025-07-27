@@ -1,17 +1,31 @@
 
 
 // IMMEDIATE TEST - This should show before jQuery loads
-console.log('🚀 JAVASCRIPT FILE LOADED!');
-console.log('Environment URL:', window.location.href);
-console.log('Current time:', new Date().toISOString());
+console.log('🚀 APP.JS: File parsed successfully!');
+console.log('🚀 APP.JS: Environment URL:', window.location.href);
+console.log('🚀 APP.JS: Current time:', new Date().toISOString());
 
 // VISUAL CONFIRMATION - Remove this after testing
-alert('🔧 DEBUG: JavaScript is executing! Environment: ' + window.location.protocol + '//' + window.location.host);
+alert('🟣 APP.JS EXECUTING: Our code inside app.js is running! Environment: ' + window.location.protocol + '//' + window.location.host);
 
-$(document).ready(function () {
-    // JQUERY READY TEST
-    console.log('✅ JQUERY READY FIRED!');
-    console.log('jQuery version:', $.fn.jquery);
+// Test if there's an error before document ready
+try {
+    console.log('🟣 APP.JS: About to set up document ready...');
+} catch (e) {
+    console.error('🟣 APP.JS: Error before document ready:', e);
+    alert('🟣 APP.JS ERROR: ' + e.message);
+}
+
+try {
+    console.log('🟣 APP.JS: Attempting to call jQuery document ready...');
+    
+    $(document).ready(function () {
+        // JQUERY READY TEST
+        console.log('✅ JQUERY READY FIRED from app.js!');
+        console.log('✅ jQuery version from app.js:', $.fn.jquery);
+        alert('🟣 JQUERY READY: Document ready fired successfully in app.js!');
+        
+        try {
     
     // Navbar Debug Function
     function debugNavbar() {
@@ -270,5 +284,14 @@ $(document).ready(function () {
                 $spinner.addClass('d-none');
             }
         });
+        
+        } catch (innerError) {
+            console.error('🟣 APP.JS: Error inside document ready:', innerError);
+            alert('🟣 INNER ERROR: ' + innerError.message);
+        }
     });
-});
+    
+} catch (outerError) {
+    console.error('🟣 APP.JS: Error setting up document ready:', outerError);
+    alert('🟣 OUTER ERROR: ' + outerError.message);
+}
