@@ -131,10 +131,8 @@ h6, .h6 { font-size: var(--font-base); }
     background-repeat: no-repeat;
 }
 
-/* Global img rule - excludes navbar brand images */
-img:not(.navbar-brand img):not(.navbar .navbar-brand img) {
-    width: 100%;
-}
+/* Removed problematic global img width rule that was affecting navbar logo */
+/* Images get width: 100% from Bootstrap's .img-fluid class when needed */
 
 a {
     color: var(--dark);
@@ -1087,9 +1085,11 @@ input.form-control {
    ======================================================================= */
 .navbar .navbar-brand img[src*="new-logo"],
 .navbar .navbar-brand img[alt*="La Voix des Animaux"],
+.navbar .navbar-brand img.d-inline-block,
 .navbar .navbar-brand img,
 .navbar-brand img[src*="new-logo"],
 .navbar-brand img[alt*="La Voix des Animaux"],
+.navbar-brand img.d-inline-block,
 .navbar-brand img {
     width: 170px !important; /* Fixed size - no variables */
     height: auto !important;
