@@ -47,12 +47,23 @@ $(document).ready(function () {
             console.log('  - Total slides:', event.item ? event.item.count : 'unknown');
             console.log('  - Carousel element:', this);
             
-            // Log which slide is currently active
+            // Log which slide is currently active and its background image
             setTimeout(function() {
                 const activeSlide = $('.hero-slider .owl-item.active .slide');
                 if (activeSlide.length) {
                     const slideClass = activeSlide.attr('class').match(/slide\d+/);
+                    const computedStyle = window.getComputedStyle(activeSlide[0]);
+                    const backgroundImage = computedStyle.backgroundImage;
+                    
                     console.log(getTimestamp() + ' - Active slide detected:', slideClass ? slideClass[0] : 'unknown');
+                    console.log('  - Background image:', backgroundImage);
+                    
+                    // Extract just the filename from the background image URL
+                    const urlMatch = backgroundImage.match(/url\("?([^"]+)"?\)/);
+                    if (urlMatch) {
+                        const filename = urlMatch[1].split('/').pop();
+                        console.log('  - Image filename:', filename);
+                    }
                 }
             }, 100);
         },
@@ -61,12 +72,33 @@ $(document).ready(function () {
             console.log(getTimestamp() + ' - Slide changed to index: ' + (event.page ? event.page.index : 'unknown'));
             console.log('  - Item info:', event.item ? {index: event.item.index, count: event.item.count} : 'no item info');
             
-            // Log which slide is now active
+            // Log which slide is now active and its background image
             setTimeout(function() {
                 const activeSlide = $('.hero-slider .owl-item.active .slide');
                 if (activeSlide.length) {
                     const slideClass = activeSlide.attr('class').match(/slide\d+/);
+                    const computedStyle = window.getComputedStyle(activeSlide[0]);
+                    const backgroundImage = computedStyle.backgroundImage;
+                    
                     console.log(getTimestamp() + ' - New active slide:', slideClass ? slideClass[0] : 'unknown');
+                    console.log('  - Background image:', backgroundImage);
+                    
+                    // Extract just the filename from the background image URL
+                    const urlMatch = backgroundImage.match(/url\("?([^"]+)"?\)/);
+                    if (urlMatch) {
+                        const filename = urlMatch[1].split('/').pop();
+                        console.log('  - Image filename:', filename);
+                        
+                        // Also check if the image actually exists/loads
+                        const img = new Image();
+                        img.onload = function() {
+                            console.log('    ✓ Image loaded successfully:', filename);
+                        };
+                        img.onerror = function() {
+                            console.log('    ✗ Image failed to load:', filename);
+                        };
+                        img.src = urlMatch[1];
+                    }
                 }
             }, 50);
         }
