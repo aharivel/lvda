@@ -1,3 +1,6 @@
+// BASIC TEST - This should appear immediately
+console.log('=== DEBUG: app.js file is loading ===');
+
 // Timing debug helper
 function getTimestamp() {
     return new Date().toISOString() + ' [' + performance.now().toFixed(2) + 'ms]';
