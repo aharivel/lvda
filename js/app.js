@@ -1,6 +1,26 @@
+// Timing debug helper
+function getTimestamp() {
+    return new Date().toISOString() + ' [' + performance.now().toFixed(2) + 'ms]';
+}
+
+console.log(getTimestamp() + ' - Script loading started');
+
+// Also listen for window load to compare timing
+$(window).on('load', function() {
+    console.log(getTimestamp() + ' - Window load event fired (all resources loaded)');
+    console.log('  - Images and stylesheets fully loaded');
+});
+
 $(document).ready(function () {
+    console.log(getTimestamp() + ' - jQuery document ready fired');
+    console.log(getTimestamp() + ' - DOM elements check:');
+    console.log('  - .hero-slider elements found:', $('.hero-slider').length);
+    console.log('  - .slide elements found:', $('.slide').length);
+    console.log('  - jQuery version:', $.fn.jquery);
+    console.log('  - Owl Carousel available:', typeof $.fn.owlCarousel !== 'undefined');
 
     // Hero Slider
+    console.log(getTimestamp() + ' - Initializing hero slider...');
     $('.hero-slider').owlCarousel({
         loop: true,
         margin: 0,
@@ -19,11 +39,33 @@ $(document).ready(function () {
             }
         },
         onInitialized: function(event) {
-            console.log('Carousel initialized successfully');
+            console.log(getTimestamp() + ' - Carousel initialized successfully');
+            console.log('  - Current slide index:', event.item ? event.item.index : 'unknown');
+            console.log('  - Total slides:', event.item ? event.item.count : 'unknown');
+            console.log('  - Carousel element:', this);
+            
+            // Log which slide is currently active
+            setTimeout(function() {
+                const activeSlide = $('.hero-slider .owl-item.active .slide');
+                if (activeSlide.length) {
+                    const slideClass = activeSlide.attr('class').match(/slide\d+/);
+                    console.log(getTimestamp() + ' - Active slide detected:', slideClass ? slideClass[0] : 'unknown');
+                }
+            }, 100);
         },
         onChanged: function(event) {
             // Avoid circular reference issues that prevent initialization
-            console.log('Slide changed to: ' + (event.page ? event.page.index : 'unknown'));
+            console.log(getTimestamp() + ' - Slide changed to index: ' + (event.page ? event.page.index : 'unknown'));
+            console.log('  - Item info:', event.item ? {index: event.item.index, count: event.item.count} : 'no item info');
+            
+            // Log which slide is now active
+            setTimeout(function() {
+                const activeSlide = $('.hero-slider .owl-item.active .slide');
+                if (activeSlide.length) {
+                    const slideClass = activeSlide.attr('class').match(/slide\d+/);
+                    console.log(getTimestamp() + ' - New active slide:', slideClass ? slideClass[0] : 'unknown');
+                }
+            }, 50);
         }
     });
 
