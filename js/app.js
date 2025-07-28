@@ -21,6 +21,23 @@ $(document).ready(function () {
     console.log('  - .slide elements found:', $('.slide').length);
     console.log('  - jQuery version:', $.fn.jquery);
     console.log('  - Owl Carousel available:', typeof $.fn.owlCarousel !== 'undefined');
+    
+    // Debug CSS rules for each slide
+    console.log(getTimestamp() + ' - CSS Debug: Checking slide background rules');
+    for (let i = 1; i <= 4; i++) {
+        const slideElement = $(`.slide${i}`);
+        if (slideElement.length > 0) {
+            const computedStyle = window.getComputedStyle(slideElement[0]);
+            const backgroundImage = computedStyle.backgroundImage;
+            console.log(`  - .slide${i} background:`, backgroundImage);
+            
+            // Check if the CSS rule exists by creating a test element
+            const testDiv = $(`<div class="slide slide${i}" style="display: none;"></div>`).appendTo('body');
+            const testStyle = window.getComputedStyle(testDiv[0]);
+            console.log(`  - .slide${i} test element background:`, testStyle.backgroundImage);
+            testDiv.remove();
+        }
+    }
 
     // Hero Slider
     console.log(getTimestamp() + ' - Initializing hero slider...');
