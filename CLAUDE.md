@@ -50,6 +50,7 @@ This is a French website for "La Voix des Animaux" (The Voice of Animals), a pet
 - **No build process**: Direct file editing - changes are immediately visible
 - **Local development**: Open HTML files directly in browser or use a local server
 - **Cross-browser testing**: Ensure compatibility across major browsers
+- **Cache-busting**: When CSS/JS changes aren't reflected, update version parameters in HTML files (e.g., `style.css?v=2025-07-31`)
 
 ### Adding New Pages
 1. Copy structure from existing HTML file (e.g., `index.html`)
@@ -80,6 +81,11 @@ This is a French website for "La Voix des Animaux" (The Voice of Animals), a pet
 - Boxicons (icon library)
 - LineIcons (additional icons)
 - Google Fonts (Typography)
+
+## Deployment & Caching
+- **Docker cache-busting**: Dockerfile.unified uses timestamp-based cache busting for git clone to ensure latest code
+- **Browser cache-busting**: CSS/JS files use version parameters (e.g., `?v=2025-07-31`) to force browser cache refresh
+- **Production deployment**: Use `./switch-to-unified.sh` script to rebuild containers with latest code
 
 ## Brand Guidelines
 - **Logo**: Located at `img/new-logo.png` (244x180px)
