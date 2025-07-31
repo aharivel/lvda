@@ -1,46 +1,6 @@
-// BASIC TEST - This should appear immediately
-console.log('=== DEBUG: app.js file is loading ===');
-
-// Timing debug helper
-function getTimestamp() {
-    return new Date().toISOString() + ' [' + performance.now().toFixed(2) + 'ms]';
-}
-
-console.log(getTimestamp() + ' - Script loading started');
-
-// Also listen for window load to compare timing
-$(window).on('load', function() {
-    console.log(getTimestamp() + ' - Window load event fired (all resources loaded)');
-    console.log('  - Images and stylesheets fully loaded');
-});
-
 $(document).ready(function () {
-    console.log(getTimestamp() + ' - jQuery document ready fired');
-    console.log(getTimestamp() + ' - DOM elements check:');
-    console.log('  - .hero-slider elements found:', $('.hero-slider').length);
-    console.log('  - .slide elements found:', $('.slide').length);
-    console.log('  - jQuery version:', $.fn.jquery);
-    console.log('  - Owl Carousel available:', typeof $.fn.owlCarousel !== 'undefined');
-    
-    // Debug CSS rules for each slide
-    console.log(getTimestamp() + ' - CSS Debug: Checking slide background rules');
-    for (let i = 1; i <= 4; i++) {
-        const slideElement = $(`.slide${i}`);
-        if (slideElement.length > 0) {
-            const computedStyle = window.getComputedStyle(slideElement[0]);
-            const backgroundImage = computedStyle.backgroundImage;
-            console.log(`  - .slide${i} background:`, backgroundImage);
-            
-            // Check if the CSS rule exists by creating a test element
-            const testDiv = $(`<div class="slide slide${i}" style="display: none;"></div>`).appendTo('body');
-            const testStyle = window.getComputedStyle(testDiv[0]);
-            console.log(`  - .slide${i} test element background:`, testStyle.backgroundImage);
-            testDiv.remove();
-        }
-    }
 
     // Hero Slider
-    console.log(getTimestamp() + ' - Initializing hero slider...');
     $('.hero-slider').owlCarousel({
         loop: true,
         margin: 0,
@@ -57,67 +17,6 @@ $(document).ready(function () {
             768: {
                 nav: true,
             }
-        },
-        onInitialized: function(event) {
-            console.log(getTimestamp() + ' - Carousel initialized successfully');
-            console.log('  - Current slide index:', event.item ? event.item.index : 'unknown');
-            console.log('  - Total slides:', event.item ? event.item.count : 'unknown');
-            console.log('  - Carousel element:', this);
-            
-            // Log which slide is currently active and its background image
-            setTimeout(function() {
-                const activeSlide = $('.hero-slider .owl-item.active .slide');
-                if (activeSlide.length) {
-                    const slideClass = activeSlide.attr('class').match(/slide\d+/);
-                    const computedStyle = window.getComputedStyle(activeSlide[0]);
-                    const backgroundImage = computedStyle.backgroundImage;
-                    
-                    console.log(getTimestamp() + ' - Active slide detected:', slideClass ? slideClass[0] : 'unknown');
-                    console.log('  - Background image:', backgroundImage);
-                    
-                    // Extract just the filename from the background image URL
-                    const urlMatch = backgroundImage.match(/url\("?([^"]+)"?\)/);
-                    if (urlMatch) {
-                        const filename = urlMatch[1].split('/').pop();
-                        console.log('  - Image filename:', filename);
-                    }
-                }
-            }, 100);
-        },
-        onChanged: function(event) {
-            // Avoid circular reference issues that prevent initialization
-            console.log(getTimestamp() + ' - Slide changed to index: ' + (event.page ? event.page.index : 'unknown'));
-            console.log('  - Item info:', event.item ? {index: event.item.index, count: event.item.count} : 'no item info');
-            
-            // Log which slide is now active and its background image
-            setTimeout(function() {
-                const activeSlide = $('.hero-slider .owl-item.active .slide');
-                if (activeSlide.length) {
-                    const slideClass = activeSlide.attr('class').match(/slide\d+/);
-                    const computedStyle = window.getComputedStyle(activeSlide[0]);
-                    const backgroundImage = computedStyle.backgroundImage;
-                    
-                    console.log(getTimestamp() + ' - New active slide:', slideClass ? slideClass[0] : 'unknown');
-                    console.log('  - Background image:', backgroundImage);
-                    
-                    // Extract just the filename from the background image URL
-                    const urlMatch = backgroundImage.match(/url\("?([^"]+)"?\)/);
-                    if (urlMatch) {
-                        const filename = urlMatch[1].split('/').pop();
-                        console.log('  - Image filename:', filename);
-                        
-                        // Also check if the image actually exists/loads
-                        const img = new Image();
-                        img.onload = function() {
-                            console.log('    ✓ Image loaded successfully:', filename);
-                        };
-                        img.onerror = function() {
-                            console.log('    ✗ Image failed to load:', filename);
-                        };
-                        img.src = urlMatch[1];
-                    }
-                }
-            }, 50);
         }
     });
 

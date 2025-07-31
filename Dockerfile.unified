@@ -10,11 +10,7 @@ RUN mkdir -p /usr/share/nginx/html/admin /var/run/nginx
 WORKDIR /tmp
 # Add current timestamp to bust Docker cache for git clone
 RUN echo "Build timestamp: $(date)" && \
-    git clone --branch feature/claude-improvements https://github.com/aharivel/lvda.git repo && \
-    cd repo && \
-    echo "Current commit SHA: $(git rev-parse HEAD)" && \
-    echo "CSS slide3 content:" && \
-    grep -A2 -B2 "slide3" css/style.css
+    git clone --branch feature/claude-improvements https://github.com/aharivel/lvda.git repo
 
 # Set working directory to the cloned repository root (contains website files)
 WORKDIR /tmp/repo
