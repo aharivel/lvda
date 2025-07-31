@@ -28,7 +28,7 @@ RUN cp *.html /usr/share/nginx/html/ && \
 
 
 # Copy admin panel files from cloned repo
-RUN cp -r admin/public/ /usr/share/nginx/html/admin/
+RUN cp -r admin/public/* /usr/share/nginx/html/admin/
 
 # Clean up git repository to reduce image size
 RUN rm -rf /tmp/repo
