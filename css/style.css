@@ -408,11 +408,11 @@ p {
 .navbar .navbar-nav .nav-link {
     font-family: "Frank Ruhl Libre", serif;
     color: var(--dark);
-    padding-right: 3.5rem;
-    font-size: var(--font-base);
+    padding-right: 2.5rem; /* Reduced from 3.5rem for better spacing */
+    font-size: var(--font-sm);  /* Reduced from font-base for navbar compactness */
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px; /* Reduced from 0.5px for tighter spacing */
     transition: all 0.3s ease;
 }
 
@@ -961,7 +961,7 @@ input.form-control {
     }
     
     .navbar .navbar-nav .nav-link {
-        font-size: var(--font-base);
+        font-size: var(--font-sm);
         padding-right: 1rem;
     }
     
@@ -994,7 +994,8 @@ input.form-control {
 
 @media (min-width: 768px) and (max-width: 991px) {
     .navbar .navbar-nav .nav-link {
-        padding-right: 2rem;
+        padding-right: 1.5rem; /* Reduced for better spacing on tablets */
+        font-size: var(--font-sm);
     }
     
     .navbar-brand img {
