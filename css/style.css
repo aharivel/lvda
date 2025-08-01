@@ -408,13 +408,13 @@ p {
 .navbar .navbar-nav .nav-link {
     font-family: "Frank Ruhl Libre", serif;
     color: var(--dark);
-    padding-right: 1.5rem; /* Further reduced for tighter spacing */
-    font-size: var(--font-xs);  /* Even smaller font for navbar compactness */
+    padding-right: 2.5rem; /* Reduced from 3.5rem to create more space */
+    font-size: var(--font-base);
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.1px; /* Minimal letter spacing */
+    letter-spacing: 0.5px;
     transition: all 0.3s ease;
-    white-space: nowrap; /* Prevent text wrapping */
+    white-space: nowrap; /* Prevent all nav links from wrapping */
 }
 
 .navbar .navbar-nav .nav-link.contact-btn {
@@ -433,12 +433,7 @@ p {
     font-weight: 700;
 }
 
-/* Specific fix for "Qui suis-je ?" link to prevent wrapping */
-.navbar .navbar-nav .nav-link[href="#presentation"] {
-    font-size: 0.8rem; /* Even smaller for this specific long text */
-    padding-right: 1rem; /* Tighter spacing */
-    white-space: nowrap; /* Force single line */
-}
+/* Remove the specific font size override - focusing on layout spacing instead */
 
 /* Social media icons in navbar */
 .navbar .navbar-nav .social-nav-link {
@@ -469,7 +464,7 @@ p {
 
 .navbar-brand img {
     height: auto;
-    width: 170px;
+    width: 150px; /* Reduced from 170px to create more navbar space */
 }
 
 
@@ -975,7 +970,7 @@ input.form-control {
     }
     
     .navbar-brand img {
-        width: 140px;
+        width: 130px; /* Slightly smaller for mobile */
         height: auto;
     }
     
@@ -1009,7 +1004,7 @@ input.form-control {
     }
     
     .navbar-brand img {
-        width: 150px;
+        width: 140px; /* Slightly smaller for tablet */
         height: auto;
     }
 }
@@ -1028,11 +1023,11 @@ input.form-control {
 @media (min-width: 992px) and (max-width: 1199px) {
     .navbar .navbar-brand img,
     .navbar-brand img {
-        width: 160px !important;
+        width: 150px !important;
         height: auto !important;
         display: block !important;
         max-width: none !important; /* FIXED: Override global width: 100% */
-        min-width: 160px !important;
+        min-width: 150px !important;
     }
     
 }
@@ -1041,11 +1036,11 @@ input.form-control {
 @media (min-width: 1200px) {
     .navbar .navbar-brand img,
     .navbar-brand img {
-        width: 180px !important;
+        width: 160px !important; /* Slightly larger for large screens */
         height: auto !important;
         display: block !important;
         max-width: none !important; /* FIXED: Override global width: 100% */
-        min-width: 180px !important;
+        min-width: 160px !important;
     }
     
 }
@@ -1093,11 +1088,11 @@ input.form-control {
 .navbar-brand img[alt*="La Voix des Animaux"],
 .navbar-brand img.d-inline-block,
 .navbar-brand img {
-    width: 170px !important; /* Fixed size - override Bootstrap's width: 100% */
+    width: 150px !important; /* Reduced from 170px to create more navbar space */
     height: auto !important;
     max-width: none !important; /* Override Bootstrap's max-width: 100% */
     display: block !important;
-    min-width: 170px !important; /* Prevent collapse to 0px */
+    min-width: 150px !important; /* Prevent collapse to 0px */
     box-sizing: border-box !important;
     
     /* Additional overrides for any global img rules */
