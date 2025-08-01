@@ -408,12 +408,13 @@ p {
 .navbar .navbar-nav .nav-link {
     font-family: "Frank Ruhl Libre", serif;
     color: var(--dark);
-    padding-right: 2.5rem; /* Reduced from 3.5rem for better spacing */
-    font-size: var(--font-sm);  /* Reduced from font-base for navbar compactness */
+    padding-right: 1.5rem; /* Further reduced for tighter spacing */
+    font-size: var(--font-xs);  /* Even smaller font for navbar compactness */
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.3px; /* Reduced from 0.5px for tighter spacing */
+    letter-spacing: 0.1px; /* Minimal letter spacing */
     transition: all 0.3s ease;
+    white-space: nowrap; /* Prevent text wrapping */
 }
 
 .navbar .navbar-nav .nav-link.contact-btn {
@@ -430,6 +431,13 @@ p {
 .navbar .navbar-nav .nav-link.active {
     color: var(--brand);
     font-weight: 700;
+}
+
+/* Specific fix for "Qui suis-je ?" link to prevent wrapping */
+.navbar .navbar-nav .nav-link[href="#presentation"] {
+    font-size: 0.8rem; /* Even smaller for this specific long text */
+    padding-right: 1rem; /* Tighter spacing */
+    white-space: nowrap; /* Force single line */
 }
 
 /* Social media icons in navbar */
@@ -961,8 +969,9 @@ input.form-control {
     }
     
     .navbar .navbar-nav .nav-link {
-        font-size: var(--font-sm);
-        padding-right: 1rem;
+        font-size: var(--font-xs);
+        padding-right: 0.8rem;
+        white-space: nowrap;
     }
     
     .navbar-brand img {
@@ -994,8 +1003,9 @@ input.form-control {
 
 @media (min-width: 768px) and (max-width: 991px) {
     .navbar .navbar-nav .nav-link {
-        padding-right: 1.5rem; /* Reduced for better spacing on tablets */
-        font-size: var(--font-sm);
+        padding-right: 1rem; /* Reduced for better spacing on tablets */
+        font-size: var(--font-xs);
+        white-space: nowrap;
     }
     
     .navbar-brand img {
