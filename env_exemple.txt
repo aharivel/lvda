@@ -1,0 +1,17 @@
+# Production Environment Variables
+# Copy this file to .env and fill in your actual values
+
+# Admin Panel Credentials
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=your_secure_password_here
+
+# Cloudflare Tunnel Configuration
+# This should be the TUNNEL TOKEN (not tunnel ID) from Cloudflare dashboard
+# It's a very long string starting with "eyJ..." 
+CLOUDFLARE_TUNNEL_ID=eyJ...your-very-long-cloudflare-tunnel-token-here
+
+# Backend Port (internal, not exposed via tunnel)
+BACKEND_PORT=3001
+
+# Environment
+NODE_ENV=production

@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # Frontend - Expose port for Cloudflare tunnel access
+  frontend:
+    build: 
+      context: .
+      dockerfile: Dockerfile.unified
+    ports:
+      - "8080:3000"  # Expose to host for tunnel access
+    depends_on:
+      - backend
+    networks:
+      - lvda_network
+    container_name: lvda-frontend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "lvda.service=frontend"
+      - "lvda.expose=cloudflare-tunnel-only"
+
+  # Backend - Internal only, not exposed to internet
+  backend:
+    build: ./backend
+    # No external ports - only accessible from frontend container
+    volumes:
+      - database_data:/data
+    networks:
+      - lvda_network
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DB_PATH=/data/contacts.db
+      - PORT=3001
+      - ALLOWED_ORIGINS=http://frontend:3000
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "lvda.service=backend"
+      - "lvda.expose=internal-only"
+
+
+volumes:
+  database_data:
+    driver: local
+    labels:
+      - "lvda.data=contacts-database"
+
+networks:
+  lvda_network:
+    driver: bridge
+    labels:
+      - "lvda.network=internal"
