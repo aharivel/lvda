@@ -50,7 +50,7 @@ $(document).ready(function () {
         items: 1,
         margin: 24,
         autoplay: true,
-        autoplayTimeout: 12000,
+        autoplayTimeout: 16000,
     });
 
     // Smooth Scrolling
@@ -161,5 +161,107 @@ $(document).ready(function () {
             }
         });
     });
+
+    // Service Area Map
+    if (document.getElementById('serviceMap')) {
+        // Coordinates for La Voix des Animaux in Seltz, France
+        const seltzCoords = [48.896119, 8.108433];
+        
+        // Initialize map centered on Seltz with wider view (Bas-Rhin département)
+        const map = L.map('serviceMap').setView(seltzCoords, 9);
+        
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+        
+        // Load France boundaries from Nominatim and create mask effect
+        fetch('https://nominatim.openstreetmap.org/search?country=france&polygon_geojson=1&format=json')
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0 && data[0].geojson) {
+                    const franceGeoJSON = data[0].geojson;
+                    
+                    // Create a world polygon with France as a hole (mask effect)
+                    const worldBounds = [
+                        // Outer world boundary
+                        [[-90, -180], [-90, 180], [90, 180], [90, -180], [-90, -180]]
+                    ];
+                    
+                    // Add France geometry as holes in the world polygon
+                    if (franceGeoJSON.type === 'MultiPolygon') {
+                        // France has multiple polygons (mainland + overseas)
+                        franceGeoJSON.coordinates.forEach(polygon => {
+                            // Add each polygon as a hole (reverse coordinates for hole)
+                            const hole = polygon[0].map(coord => [coord[1], coord[0]]).reverse();
+                            worldBounds.push(hole);
+                        });
+                    } else if (franceGeoJSON.type === 'Polygon') {
+                        // Single polygon
+                        const hole = franceGeoJSON.coordinates[0].map(coord => [coord[1], coord[0]]).reverse();
+                        worldBounds.push(hole);
+                    }
+                    
+                    // Create the mask layer (world minus France = greyed out areas)
+                    const worldMask = L.polygon(worldBounds, {
+                        color: 'transparent',
+                        fillColor: '#888888',
+                        fillOpacity: 0.6,
+                        stroke: false,
+                        interactive: false
+                    }).addTo(map);
+                    
+                    console.log('France boundaries loaded successfully from Nominatim');
+                } else {
+                    throw new Error('No France data found');
+                }
+            })
+            .catch(error => {
+                console.log('Could not load France boundaries from Nominatim, using fallback approach:', error);
+                // Fallback: Simple Germany overlay
+                const germanyArea = L.polygon([
+                    [49.5, 8.1], [49.5, 9.0], [48.5, 9.0], [48.5, 8.1], [49.5, 8.1]
+                ], {
+                    color: 'transparent',
+                    fillColor: '#888888',
+                    fillOpacity: 0.6,
+                    stroke: false
+                }).addTo(map);
+            });
+        
+        // Add marker for La Voix des Animaux
+        const marker = L.marker(seltzCoords).addTo(map);
+        marker.bindPopup('<b>La Voix des Animaux</b><br>Services animaliers<br>Seltz, France').openPopup();
+        
+        // Service area circle (25km radius)
+        const serviceCircle = L.circle(seltzCoords, {
+            color: '#64CADA',
+            fillColor: '#64CADA',
+            fillOpacity: 0.3,
+            radius: 25000 // 25km in meters
+        }).addTo(map);
+        
+        // Add legend
+        const legend = L.control({position: 'bottomright'});
+        legend.onAdd = function(map) {
+            const div = L.DomUtil.create('div', 'legend');
+            div.style.backgroundColor = 'white';
+            div.style.padding = '10px';
+            div.style.borderRadius = '5px';
+            div.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+            div.innerHTML = `
+                <div style="margin-bottom: 5px;">
+                    <span style="display: inline-block; width: 12px; height: 12px; background-color: #64CADA; border-radius: 50%; opacity: 0.7; margin-right: 5px;"></span>
+                    <small>Zone de service (25km)</small>
+                </div>
+                <div>
+                    <span style="display: inline-block; width: 12px; height: 12px; background-color: #cccccc; border-radius: 50%; opacity: 0.7; margin-right: 5px;"></span>
+                    <small>Hors zone de service</small>
+                </div>
+            `;
+            return div;
+        };
+        legend.addTo(map);
+    }
 
 });

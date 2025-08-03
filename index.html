@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="./css/owl.carousel.min.css">
     <link rel="stylesheet" href="./css/owl.theme.default.min.css">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="./css/style.css?v=2025-07-31">
     <!-- CRITICAL: Navbar override MUST load last to override Bootstrap -->
     <link rel="stylesheet" href="./css/navbar-override.css?v=2025-07-31">
@@ -367,6 +369,26 @@
             <h2 class="text-uppercase lined mb-4">Contact</h2>
             <p class="lead mb-5">N'hésitez pas à me contacter pour toute question ou pour prendre rendez-vous. Je serai ravie de vous accompagner dans votre relation avec votre compagnon à quatre pattes.</p>
         </header>
+        
+        <!-- Zone de service carte -->
+        <div class="row gy-4 mb-5">
+            <div class="col-lg-6">
+                <div id="serviceMap" style="height: 400px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>
+            </div>
+            <div class="col-lg-6">
+                <h4 class="mb-3">Zone de service</h4>
+                <p class="text-muted">Mes services sont disponibles dans un rayon de <strong style="color: #935CC0;">25-30 km autour de Seltz</strong>, exclusivement en France.</p>
+                <p class="text-muted">Cette zone couvre notamment :</p>
+                <ul class="text-muted">
+                    <li>Seltz et environs (67470)</li>
+                    <li>Lauterbourg</li>
+                    <li>Wissembourg</li>
+                    <li>Soultz-sous-Forêts</li>
+                    <li>Haguenau</li>
+                </ul>
+            </div>
+        </div>
+        
         <div class="row gy-4">
             <div class="col-lg-8 offset-lg-2">
                 <form id="contactForm">
@@ -406,21 +428,6 @@
         <div class="owl-theme owl-carousel reviews-slider container">
             <div class="review">
                 <div class="person">
-                    <img src="img/sky.jpg" alt="Sky">
-                    <h5>Sky</h5>
-                </div>
-                <h3>Today was the first day that Carole took my dog and she was very very kind and everything went perfectly, her dog is absolutely lovely too and all I can say is that I will never change her with anyone else because she really puts lots of love, respect and devotion in what she does! She deserves all the 5 stars and more! I'm very happy that I had the chance to find her and I would definitely recommend her to anyone!</h3>
-                <div class="stars">
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
-                    <i class='bx bxs-star'></i>
-                </div>
-                <i class='bx bxs-quote-alt-left'></i>
-            </div>
-            <div class="review">
-                <div class="person">
                     <img src="img/jazz.jpg" alt="Jazz">
                     <h5>Jazz</h5>
                 </div>
@@ -440,6 +447,21 @@
                     <h5>Rehani</h5>
                 </div>
                 <h3>Première expérience pour notre Rehani âgée d'1 an. Carole a su la mettre en confiance par sa patience alors que c'est une chienne peureuse. Grâce aux nombreuses balades, jeux et rencontres canines Rehani a pu s'épanouir. Une belle rencontre et une expérience réussite pour notre Rehani. Carole nous a tenu au courant de l'évolution des relations pendant le séjour et nous a envoyé de nombreuses photos et vidéo. Encore un grand merci à elle pour sa gentillesse et sa patience</h3>
+                <div class="stars">
+                    <i class='bx bxs-star'></i>
+                    <i class='bx bxs-star'></i>
+                    <i class='bx bxs-star'></i>
+                    <i class='bx bxs-star'></i>
+                    <i class='bx bxs-star'></i>
+                </div>
+                <i class='bx bxs-quote-alt-left'></i>
+            </div>
+            <div class="review">
+                <div class="person">
+                    <img src="img/sky.jpg" alt="Sky">
+                    <h5>Sky</h5>
+                </div>
+                <h3>Today was the first day that Carole took my dog and she was very very kind and everything went perfectly, her dog is absolutely lovely too and all I can say is that I will never change her with anyone else because she really puts lots of love, respect and devotion in what she does! She deserves all the 5 stars and more! I'm very happy that I had the chance to find her and I would definitely recommend her to anyone!</h3>
                 <div class="stars">
                     <i class='bx bxs-star'></i>
                     <i class='bx bxs-star'></i>
@@ -538,6 +560,8 @@
 <script src="./js/jquery.min.js"></script>
 <script src="./js/bootstrap.bundle.min.js"></script>
 <script src="./js/owl.carousel.min.js"></script>
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="./js/app.js?v=2025-07-31"></script>
 </body>
 
