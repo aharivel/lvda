@@ -24,8 +24,8 @@ RUN cp *.html /usr/share/nginx/html/ && \
     cp -r css/ /usr/share/nginx/html/ && \
     cp -r js/ /usr/share/nginx/html/ && \
     cp -r img/ /usr/share/nginx/html/ && \
-    cp -r video/ /usr/share/nginx/html/ && \
-    cp -r vendor/ /usr/share/nginx/html/
+    cp -r vendor/ /usr/share/nginx/html/ && \
+    (cp -r video/ /usr/share/nginx/html/ 2>/dev/null || echo "No video folder found")
 
 
 # Copy admin panel files from cloned repo
