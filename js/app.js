@@ -50,7 +50,7 @@ $(document).ready(function () {
         items: 1,
         margin: 24,
         autoplay: true,
-        autoplayTimeout: 7000,
+        autoplayTimeout: 12000,
     });
 
     // Smooth Scrolling
