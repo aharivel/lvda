@@ -175,7 +175,19 @@ $(document).ready(function () {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
         
-        // Load France boundaries from Nominatim and create mask effect
+        // Add marker for La Voix des Animaux
+        const marker = L.marker(seltzCoords).addTo(map);
+        marker.bindPopup('<b>La Voix des Animaux</b><br>Services animaliers<br>Seltz, France').openPopup();
+        
+        // Add service area circle FIRST (so it goes UNDER the mask)
+        const serviceCircle = L.circle(seltzCoords, {
+            color: '#2298A9',
+            fillColor: '#2298A9',
+            fillOpacity: 0.5,
+            radius: 25000 // 25km in meters
+        }).addTo(map);
+        
+        // Load France boundaries from Nominatim and create mask effect ON TOP
         fetch('https://nominatim.openstreetmap.org/search?country=france&polygon_geojson=1&format=json')
             .then(response => response.json())
             .then(data => {
@@ -202,11 +214,11 @@ $(document).ready(function () {
                         worldBounds.push(hole);
                     }
                     
-                    // Create the mask layer (world minus France = greyed out areas)
+                    // Create the mask layer (world minus France = SOLID WHITE) ON TOP
                     const worldMask = L.polygon(worldBounds, {
                         color: 'transparent',
-                        fillColor: '#888888',
-                        fillOpacity: 0.6,
+                        fillColor: '#FFFFFF',
+                        fillOpacity: 1.0,
                         stroke: false,
                         interactive: false
                     }).addTo(map);
@@ -223,23 +235,11 @@ $(document).ready(function () {
                     [49.5, 8.1], [49.5, 9.0], [48.5, 9.0], [48.5, 8.1], [49.5, 8.1]
                 ], {
                     color: 'transparent',
-                    fillColor: '#888888',
-                    fillOpacity: 0.6,
+                    fillColor: '#FFFFFF',
+                    fillOpacity: 1.0,
                     stroke: false
                 }).addTo(map);
             });
-        
-        // Add marker for La Voix des Animaux
-        const marker = L.marker(seltzCoords).addTo(map);
-        marker.bindPopup('<b>La Voix des Animaux</b><br>Services animaliers<br>Seltz, France').openPopup();
-        
-        // Service area circle (25km radius)
-        const serviceCircle = L.circle(seltzCoords, {
-            color: '#64CADA',
-            fillColor: '#64CADA',
-            fillOpacity: 0.3,
-            radius: 25000 // 25km in meters
-        }).addTo(map);
         
         // Add legend
         const legend = L.control({position: 'bottomright'});
@@ -250,13 +250,9 @@ $(document).ready(function () {
             div.style.borderRadius = '5px';
             div.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
             div.innerHTML = `
-                <div style="margin-bottom: 5px;">
-                    <span style="display: inline-block; width: 12px; height: 12px; background-color: #64CADA; border-radius: 50%; opacity: 0.7; margin-right: 5px;"></span>
-                    <small>Zone de service (25km)</small>
-                </div>
                 <div>
-                    <span style="display: inline-block; width: 12px; height: 12px; background-color: #cccccc; border-radius: 50%; opacity: 0.7; margin-right: 5px;"></span>
-                    <small>Hors zone de service</small>
+                    <span style="display: inline-block; width: 12px; height: 12px; background-color: #2298A9; border-radius: 50%; opacity: 0.7; margin-right: 5px;"></span>
+                    <small>Zone de service (25km)</small>
                 </div>
             `;
             return div;
