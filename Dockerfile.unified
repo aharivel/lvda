@@ -21,6 +21,7 @@ RUN cp nginx-unified.conf /etc/nginx/nginx.conf
 
 # Copy main website files from cloned repo
 RUN cp *.html /usr/share/nginx/html/ && \
+    cp *.xml /usr/share/nginx/html/ && \
     cp -r css/ /usr/share/nginx/html/ && \
     cp -r js/ /usr/share/nginx/html/ && \
     cp -r img/ /usr/share/nginx/html/ && \
