@@ -18,12 +18,6 @@ services:
       - NODE_ENV=production
       - ADMIN_USERNAME=${ADMIN_USERNAME}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
     labels:
       - "lvda.service=frontend"
       - "lvda.expose=cloudflare-tunnel-only"
@@ -42,12 +36,6 @@ services:
       - DB_PATH=/data/contacts.db
       - PORT=3001
       - ALLOWED_ORIGINS=http://frontend:3000
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
     labels:
       - "lvda.service=backend"
       - "lvda.expose=internal-only"
