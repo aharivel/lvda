@@ -13,11 +13,28 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+# Detect architecture
+ARCH=$(uname -m)
+case $ARCH in
+    x86_64)
+        CLOUDFLARED_BINARY="cloudflared-linux-amd64"
+        ;;
+    aarch64)
+        echo "⚠️  ARM64 Alpine (musl) detected - glibc binary incompatible"
+        echo "🐳 Using Docker container approach instead..."
+        USE_DOCKER=true
+        ;;
+    *)
+        echo "❌ Unsupported architecture: $ARCH"
+        exit 1
+        ;;
+esac
+
 # Install cloudflared binary
-echo "📥 Downloading cloudflared binary..."
-wget -O /tmp/cloudflared-linux-amd64 https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
-chmod +x /tmp/cloudflared-linux-amd64
-mv /tmp/cloudflared-linux-amd64 /usr/local/bin/cloudflared
+echo "📥 Downloading cloudflared binary for $ARCH..."
+wget -O /tmp/cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/$CLOUDFLARED_BINARY
+chmod +x /tmp/cloudflared
+mv /tmp/cloudflared /usr/local/bin/cloudflared
 
 # Verify installation
 echo "✅ Verifying cloudflared installation..."

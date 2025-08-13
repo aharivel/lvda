@@ -19,17 +19,18 @@ Internet → Cloudflare Tunnel → Router VM (HAProxy) → {
 
 ## 1. Routing VM Setup (Router)
 
-### Alpine 3.12 Base Installation
+### Debian 12 Base Installation
 
 ```bash
-# Update package index
-apk update
+# Update package list
+sudo apt update && sudo apt upgrade -y
 
 # Install required packages
-apk add haproxy cloudflared nodejs npm sqlite curl bash
+sudo apt install -y haproxy nodejs npm git curl wget sqlite3
 
-# Install process manager (PM2) for Node.js
-npm install -g pm2
+# Install Node.js LTS (if needed)
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt install -y nodejs
 ```
 
 ### HAProxy Configuration
@@ -65,11 +66,11 @@ EOF
 # - Replace 192.168.1.75 with your backup server IP
 
 # Test HAProxy configuration
-haproxy -c -f /etc/haproxy/haproxy.cfg
+sudo haproxy -c -f /etc/haproxy/haproxy.cfg
 
 # Start HAProxy
-rc-update add haproxy
-service haproxy start
+sudo systemctl enable haproxy
+sudo systemctl start haproxy
 ```
 
 ### Cloudflare Tunnel Configuration
@@ -79,21 +80,21 @@ service haproxy start
 ```bash
 # Clone LVDA repository
 git clone YOUR_REPO_URL /opt/lvda
-cd /opt/lvda/alpine
+cd /opt/lvda/debian
 
 # Run automated installation
 sudo ./install-cloudflared.sh
 
 # Edit tunnel token
-sudo nano /etc/conf.d/cloudflared
+sudo nano /etc/default/cloudflared
 # Replace YOUR_TUNNEL_TOKEN_HERE with your actual token
 
 # Enable and start service
-sudo rc-update add cloudflared default
-sudo service cloudflared start
+sudo systemctl enable cloudflared
+sudo systemctl start cloudflared
 
 # Check status
-sudo service cloudflared status
+sudo systemctl status cloudflared
 ```
 
 **Option 2: Manual Installation**
@@ -105,182 +106,93 @@ chmod +x cloudflared-linux-amd64
 sudo mv cloudflared-linux-amd64 /usr/local/bin/cloudflared
 
 # Create user and directories
-sudo adduser -D -s /bin/sh cloudflared
-sudo mkdir -p /etc/cloudflared
-sudo chown cloudflared:cloudflared /etc/cloudflared
+sudo useradd --system --home /var/lib/cloudflared --shell /usr/sbin/nologin cloudflared
+sudo mkdir -p /var/lib/cloudflared
+sudo chown cloudflared:cloudflared /var/lib/cloudflared
 
 # Copy service files from repository
-sudo cp /opt/lvda/alpine/cloudflared-init.sh /etc/init.d/cloudflared
-sudo cp /opt/lvda/alpine/cloudflared.conf /etc/conf.d/cloudflared
+sudo cp /opt/lvda/debian/cloudflared.service /etc/systemd/system/
+sudo cp /opt/lvda/debian/cloudflared.env /etc/default/cloudflared
 
 # Set permissions
-sudo chmod +x /etc/init.d/cloudflared
-sudo chmod 600 /etc/conf.d/cloudflared
+sudo chmod 600 /etc/default/cloudflared
+sudo systemctl daemon-reload
 
 # Configure tunnel token
-sudo nano /etc/conf.d/cloudflared
+sudo nano /etc/default/cloudflared
 
 # Enable and start service
-sudo rc-update add cloudflared default
-sudo service cloudflared start
+sudo systemctl enable cloudflared
+sudo systemctl start cloudflared
 ```
 
-See `alpine/README.md` for detailed instructions and troubleshooting.
+See `debian/README.md` for detailed instructions and troubleshooting.
 
 ### Backend API Setup
 
 ```bash
-# Create backend directory
-mkdir -p /opt/lvda-backend
+# Create backend directory and copy files
+sudo mkdir -p /opt/lvda-backend /var/lib/lvda
 cd /opt/lvda-backend
 
-# Create simple Node.js API
-cat > package.json << 'EOF'
-{
-  "name": "lvda-backend",
-  "version": "1.0.0",
-  "description": "LVDA Backend API",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "express": "^4.18.2",
-    "sqlite3": "^5.1.6",
-    "cors": "^2.8.5"
-  }
-}
-EOF
+# Copy backend files from repository
+sudo cp -r /opt/lvda/backend/* .
 
 # Install dependencies
-npm install
+sudo npm install
 
-# Create basic API server
-cat > server.js << 'EOF'
-const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
-const cors = require('cors');
-const path = require('path');
+# Set up systemd service
+sudo cp /opt/lvda/debian/lvda-backend.service /etc/systemd/system/
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-const DB_PATH = process.env.DATABASE_PATH || '/data/lvda.db';
+# Set proper ownership
+sudo chown -R www-data:www-data /opt/lvda-backend /var/lib/lvda
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+# Reload systemd and start service
+sudo systemctl daemon-reload
+sudo systemctl enable lvda-backend
+sudo systemctl start lvda-backend
 
-// Initialize database
-const db = new sqlite3.Database(DB_PATH, (err) => {
-  if (err) {
-    console.error('Error opening database:', err);
-  } else {
-    console.log('Connected to SQLite database');
-    
-    // Create messages table if it doesn't exist
-    db.run(`CREATE TABLE IF NOT EXISTS messages (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      email TEXT NOT NULL,
-      phone TEXT,
-      subject TEXT,
-      message TEXT NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
-  }
-});
-
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
-});
-
-// Contact form submission
-app.post('/api/contact', (req, res) => {
-  const { name, email, phone, subject, message } = req.body;
-  
-  if (!name || !email || !message) {
-    return res.status(400).json({ error: 'Name, email, and message are required' });
-  }
-  
-  const stmt = db.prepare(`INSERT INTO messages (name, email, phone, subject, message) VALUES (?, ?, ?, ?, ?)`);
-  stmt.run([name, email, phone || null, subject || null, message], function(err) {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ error: 'Database error' });
-    }
-    
-    res.json({ 
-      success: true, 
-      message: 'Message saved successfully',
-      id: this.lastID 
-    });
-  });
-  stmt.finalize();
-});
-
-// Get messages (admin endpoint)
-app.get('/api/messages', (req, res) => {
-  db.all('SELECT * FROM messages ORDER BY created_at DESC', [], (err, rows) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ error: 'Database error' });
-    }
-    
-    res.json(rows);
-  });
-});
-
-app.listen(PORT, '127.0.0.1', () => {
-  console.log(`LVDA Backend API running on port ${PORT}`);
-});
-EOF
-
-# Create data directory
-mkdir -p /data
-chown nobody:nobody /data
-
-# Start API with PM2
-pm2 start server.js --name lvda-backend
-pm2 save
-pm2 startup
-
-# Enable PM2 to start at boot
-rc-update add pm2-nobody
+# Check service status
+sudo systemctl status lvda-backend
 ```
 
-### Environment Configuration
+### Service Management
 
 ```bash
-# Create environment file
-cat > /etc/environment << 'EOF'
-PORT=3000
-DATABASE_PATH=/data/lvda.db
-EOF
+# View service logs
+sudo journalctl -u cloudflared -f
+sudo journalctl -u haproxy -f  
+sudo journalctl -u lvda-backend -f
 
-# Source environment
-source /etc/environment
+# Restart services
+sudo systemctl restart cloudflared
+sudo systemctl restart haproxy
+sudo systemctl restart lvda-backend
+
+# Check all service status
+sudo systemctl status cloudflared haproxy lvda-backend
 ```
 
 ---
 
 ## 2. Frontend VM Setup (Primary & Backup Servers)
 
-### Alpine 3.12 Base Installation
+### Debian 12 Base Installation
 
 ```bash
-# Update package index
-apk update
+# Update package list
+sudo apt update && sudo apt upgrade -y
 
 # Install required packages for containerization
-apk add docker docker-compose git curl bash
+sudo apt install -y docker.io docker-compose git curl
 
 # Start Docker service
-rc-update add docker
-service docker start
+sudo systemctl enable docker
+sudo systemctl start docker
 
 # Add user to docker group (replace 'user' with actual username)
-addgroup user docker
+sudo usermod -aG docker $USER
+newgrp docker
 ```
 
 ### Deploy Frontend
