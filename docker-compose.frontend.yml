@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  lvda-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.unified
+    container_name: lvda-frontend
+    ports:
+      - "8080:80"
+    environment:
+      - BACKEND_API_URL=${BACKEND_API_URL:-http://192.168.1.10}
+    restart: unless-stopped
+    volumes:
+      - ./logs:/var/log/nginx:rw
+    networks:
+      - lvda-network
+    labels:
+      - "com.lvda.service=frontend"
+      - "com.lvda.architecture=ha"
+
+networks:
+  lvda-network:
+    driver: bridge
+    name: lvda-network

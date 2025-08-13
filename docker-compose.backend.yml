@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  lvda-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: lvda-backend
+    ports:
+      - "${API_PORT:-3000}:3000"
+    environment:
+      - PORT=3000
+      - DB_PATH=/data/contacts.db
+      - NODE_ENV=production
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:8080,http://192.168.1.74:8080,http://192.168.1.75:8080}
+    volumes:
+      - lvda-backend-data:/data:rw
+      - ./backend/logs:/app/logs:rw
+    restart: unless-stopped
+    networks:
+      - lvda-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.lvda.service=backend"
+      - "com.lvda.architecture=ha"
+
+volumes:
+  lvda-backend-data:
+    driver: local
+    name: lvda-backend-data
+
+networks:
+  lvda-network:
+    driver: bridge
+    name: lvda-network

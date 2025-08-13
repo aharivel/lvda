@@ -357,8 +357,12 @@ app.delete('/admin-api/messages/:id', (req, res) => {
     });
 });
 
-// Health check
+// Health check endpoints
 app.get('/health', (req, res) => {
+    res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+app.get('/api/health', (req, res) => {
     res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
