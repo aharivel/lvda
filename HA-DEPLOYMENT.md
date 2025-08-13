@@ -74,21 +74,58 @@ service haproxy start
 
 ### Cloudflare Tunnel Configuration
 
+**Option 1: Automated Installation (Recommended)**
+
 ```bash
-# Create cloudflared user
-adduser -D -s /bin/sh cloudflared
+# Clone LVDA repository
+git clone YOUR_REPO_URL /opt/lvda
+cd /opt/lvda/alpine
 
-# Create config directory
-mkdir -p /etc/cloudflared
-chown cloudflared:cloudflared /etc/cloudflared
+# Run automated installation
+sudo ./install-cloudflared.sh
 
-# Install your tunnel token (replace with actual token)
-su cloudflared -c "cloudflared service install YOUR_TUNNEL_TOKEN_HERE"
+# Edit tunnel token
+sudo nano /etc/conf.d/cloudflared
+# Replace YOUR_TUNNEL_TOKEN_HERE with your actual token
 
-# Start cloudflared service
-rc-update add cloudflared
-service cloudflared start
+# Enable and start service
+sudo rc-update add cloudflared default
+sudo service cloudflared start
+
+# Check status
+sudo service cloudflared status
 ```
+
+**Option 2: Manual Installation**
+
+```bash
+# Install cloudflared binary
+wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+chmod +x cloudflared-linux-amd64
+sudo mv cloudflared-linux-amd64 /usr/local/bin/cloudflared
+
+# Create user and directories
+sudo adduser -D -s /bin/sh cloudflared
+sudo mkdir -p /etc/cloudflared
+sudo chown cloudflared:cloudflared /etc/cloudflared
+
+# Copy service files from repository
+sudo cp /opt/lvda/alpine/cloudflared-init.sh /etc/init.d/cloudflared
+sudo cp /opt/lvda/alpine/cloudflared.conf /etc/conf.d/cloudflared
+
+# Set permissions
+sudo chmod +x /etc/init.d/cloudflared
+sudo chmod 600 /etc/conf.d/cloudflared
+
+# Configure tunnel token
+sudo nano /etc/conf.d/cloudflared
+
+# Enable and start service
+sudo rc-update add cloudflared default
+sudo service cloudflared start
+```
+
+See `alpine/README.md` for detailed instructions and troubleshooting.
 
 ### Backend API Setup
 
