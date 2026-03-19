@@ -70,13 +70,12 @@ echo -e "${BLUE}🔄 Starting production deployment...${NC}"
 
 # Stop and remove all containers
 echo -e "${BLUE}📦 Stopping and removing existing containers...${NC}"
-$COMPOSE_CMD -f docker-compose.production.yml down --volumes --remove-orphans 2>/dev/null || true
+$COMPOSE_CMD -f docker-compose.production.yml down --remove-orphans 2>/dev/null || true
 
-# Clean up cache and images
-echo -e "${BLUE}🧹 Cleaning up containers, images, and cache...${NC}"
+# Clean up cache and images (volumes are preserved to keep contacts and analytics data)
+echo -e "${BLUE}🧹 Cleaning up containers and images...${NC}"
 $CONTAINER_CMD system prune -f
 $CONTAINER_CMD image prune -f
-$CONTAINER_CMD volume prune -f
 
 # Remove any existing images for this project
 echo -e "${BLUE}🗑️ Removing existing project images...${NC}"
