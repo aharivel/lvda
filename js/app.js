@@ -8,7 +8,7 @@ $(document).ready(function () {
         dots: false,
         navText: ["<i class='bx bxs-chevron-left bx-lg'></i>","<i class='bx bxs-chevron-right bx-lg'></i>"],
         smartSpeed: 1000,
-        autoplay: false,
+        autoplay: true,
         autoplayTimeout: 7000,
         responsive: {
             0: {
@@ -50,7 +50,7 @@ $(document).ready(function () {
         items: 1,
         margin: 24,
         autoplay: true,
-        autoplayTimeout: 16000,
+        autoplayTimeout: 7000,
     });
 
     // Smooth Scrolling

@@ -25,8 +25,9 @@ p .text-strong,
 div .text-strong,
 .text-strong {
     font-weight: 700 !important;
-    color: #935CC0 !important;
+    color: #2298A9 !important;
     font-family: "Frank Ruhl Libre", serif !important;
+    font-style: italic !important;
 }
 
 span.text-accent,
@@ -36,7 +37,6 @@ div .text-accent,
     color: #2298A9 !important;
     font-weight: 600 !important;
     font-family: "Frank Ruhl Libre", serif !important;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 span.method-highlight,
@@ -85,8 +85,18 @@ body {
     /*background-color: aliceblue;*/
 }
 
-h1,h2,h3,h4,h5,h6,
-.display-1,.display-2,.display-3,.display-4 {
+/* Display headings and major section titles use Raleway for contrast with body font */
+h1, h2,
+.display-1, .display-2, .display-3, .display-4 {
+    font-family: "Raleway", sans-serif;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: var(--line-tight);
+    margin-bottom: 1rem;
+}
+
+/* Sub-headings stay with the warm serif body font */
+h3, h4, h5, h6 {
     font-family: "Frank Ruhl Libre", serif;
     font-weight: 500;
     color: var(--dark);
@@ -195,8 +205,8 @@ a:hover {
 }
 
 section {
-    padding-top: 40px;
-    padding-bottom: 40px;
+    padding-top: 80px;
+    padding-bottom: 80px;
 }
 
 /* Typography Utilities */
@@ -268,7 +278,7 @@ p {
 }
 
 .intro h1 {
-    font-family: "Frank Ruhl Libre", serif;
+    font-family: "Raleway", sans-serif;
     font-size: var(--font-4xl);
     font-weight: 700;
     margin-bottom: 1rem;
@@ -320,7 +330,7 @@ p {
 
  /* slide */
 .slide {
-     min-height: 60vh;
+     min-height: 85vh;
      display: flex;
      align-items: center;
      justify-content: center;
