@@ -40,12 +40,52 @@ services:
       - "lvda.service=backend"
       - "lvda.expose=internal-only"
 
+  # Analytics DB - Internal only
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=umami
+      - POSTGRES_USER=umami
+      - POSTGRES_PASSWORD=${UMAMI_DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - lvda_network
+    restart: unless-stopped
+    labels:
+      - "lvda.service=analytics-db"
+      - "lvda.expose=internal-only"
+
+  # Analytics - Umami
+  # Tracking endpoints proxied publicly via nginx (/stats/script.js and /stats/api/send)
+  # Dashboard accessible only via SSH tunnel: ssh -L 8081:localhost:8081 your-server
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    ports:
+      - "8081:3000"  # LAN only — not reachable from internet (no port forwarding)
+    environment:
+      - DATABASE_URL=postgresql://umami:${UMAMI_DB_PASSWORD}@postgres:5432/umami
+      - APP_SECRET=${UMAMI_APP_SECRET}
+      - DISABLE_SIGNUP=true
+    depends_on:
+      - postgres
+    networks:
+      - lvda_network
+    restart: unless-stopped
+    labels:
+      - "lvda.service=analytics"
+      - "lvda.expose=ssh-tunnel-only"
+
 
 volumes:
   database_data:
     driver: local
     labels:
       - "lvda.data=contacts-database"
+  postgres_data:
+    driver: local
+    labels:
+      - "lvda.data=analytics-database"
 
 networks:
   lvda_network:
