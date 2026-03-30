@@ -38,12 +38,16 @@ podman stop "$CONTAINER_NAME" 2>/dev/null || true
 podman rm "$CONTAINER_NAME" 2>/dev/null || true
 
 # Kill any lingering pasta/rootlessport process holding port 53
-# fuser doesn't reliably see network namespace processes; use ss to find the pid
-for pid in $(ss -Hnp sport = :53 2>/dev/null | grep -oP 'pid=\K[0-9]+' | sort -u); do
+# ss shows no socket but pasta daemon may have stale internal state —
+# kill it so it restarts clean (containers reconnect automatically)
+for pid in $(ss -Hnp 'sport = :53' 2>/dev/null | grep -oP 'pid=\K[0-9]+' | sort -u) \
+           $(ss -Hunp 'sport = :53' 2>/dev/null | grep -oP 'pid=\K[0-9]+' | sort -u); do
     echo -e "${BLUE}   Releasing port 53 from pid $pid...${NC}"
     kill "$pid" 2>/dev/null || true
 done
-sleep 2
+# Also kill pasta daemon if it has stale port 53 state (it restarts automatically)
+pkill -x pasta 2>/dev/null || true
+sleep 3
 
 # Start
 echo -e "${BLUE}🚀 Starting AdGuard Home...${NC}"
@@ -52,8 +56,6 @@ podman run -d \
     --restart unless-stopped \
     -p 53:53/tcp \
     -p 53:53/udp \
-    -p "[::]:53:53/tcp" \
-    -p "[::]:53:53/udp" \
     -p 8082:80/tcp \
     -v adguard_work:/opt/adguardhome/work \
     -v adguard_conf:/opt/adguardhome/conf \

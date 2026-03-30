@@ -16,10 +16,8 @@ services:
     image: adguard/adguardhome:latest
     container_name: adguardhome
     ports:
-      - "53:53/tcp"           # DNS IPv4
-      - "53:53/udp"           # DNS IPv4
-      - "[::]:53:53/tcp"      # DNS IPv6
-      - "[::]:53:53/udp"      # DNS IPv6
+      - "53:53/tcp"           # DNS
+      - "53:53/udp"           # DNS
       - "8082:80/tcp"         # Web UI — LAN only, not via Cloudflare tunnel
     volumes:
       - adguard_work:/opt/adguardhome/work
