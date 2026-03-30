@@ -42,9 +42,13 @@ fi
 echo -e "${BLUE}📦 Pulling latest AdGuard Home image...${NC}"
 $CONTAINER_CMD pull adguard/adguardhome:latest
 
-# Stop existing container if running (preserves volumes)
+# Stop and remove only the adguardhome container (never touches other containers)
 echo -e "${BLUE}⏹️  Stopping existing container...${NC}"
-$COMPOSE_CMD -f "$COMPOSE_FILE" down 2>/dev/null || true
+$CONTAINER_CMD stop adguardhome 2>/dev/null || true
+$CONTAINER_CMD rm adguardhome 2>/dev/null || true
+
+# Wait for port 53 to be released by rootlessport
+sleep 2
 
 # Start
 echo -e "${BLUE}🚀 Starting AdGuard Home...${NC}"
