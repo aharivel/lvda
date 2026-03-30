@@ -1,0 +1,43 @@
+version: '3.8'
+
+# AdGuard Home — standalone DNS ad-blocker
+# Intentionally separate from the LVDA stack:
+#   - deploy-production.sh and cleanup-all.sh will NEVER touch this
+#   - use deploy-adguard.sh to manage it
+#
+# First-run setup wizard: http://192.168.1.74:8082
+# During setup, configure:
+#   - Web UI listen address: 0.0.0.0:3000
+#   - DNS listen address:    0.0.0.0:53
+# After setup, dashboard stays at: http://192.168.1.74:8082
+
+services:
+  adguardhome:
+    image: adguard/adguardhome:latest
+    container_name: adguardhome
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "8082:3000/tcp"   # Web UI — LAN only, not via Cloudflare tunnel
+    volumes:
+      - adguard_work:/opt/adguardhome/work
+      - adguard_conf:/opt/adguardhome/conf
+    restart: unless-stopped
+    networks:
+      - adguard_network
+
+volumes:
+  adguard_work:
+    driver: local
+    labels:
+      - "adguard.data=work"
+  adguard_conf:
+    driver: local
+    labels:
+      - "adguard.data=config"
+
+networks:
+  adguard_network:
+    driver: bridge
+    labels:
+      - "adguard.network=internal"
