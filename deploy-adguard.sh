@@ -56,7 +56,7 @@ podman run -d \
     --restart unless-stopped \
     -p 53:53/tcp \
     -p 53:53/udp \
-    -p 8082:80/tcp \
+    -p 8082:3000/tcp \
     -v adguard_work:/opt/adguardhome/work \
     -v adguard_conf:/opt/adguardhome/conf \
     "$IMAGE"
