@@ -1,6 +1,8 @@
 #!/bin/bash
 # deploy-adguard.sh — Deploy or update AdGuard Home
-# Completely independent from the LVDA website stack.
+#
+# Uses podman run directly — intentionally avoids podman-compose to
+# prevent interference with the LVDA stack containers.
 # Data volumes are preserved across updates.
 
 set -e
@@ -11,28 +13,16 @@ BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-COMPOSE_FILE="docker-compose.adguard.yml"
-
-# Detect container runtime
-if command -v podman-compose &> /dev/null; then
-    COMPOSE_CMD="podman-compose"
-    CONTAINER_CMD="podman"
-elif command -v docker-compose &> /dev/null; then
-    COMPOSE_CMD="docker-compose"
-    CONTAINER_CMD="docker"
-else
-    echo -e "${RED}❌ Neither podman-compose nor docker-compose found${NC}"
-    exit 1
-fi
+CONTAINER_NAME="adguardhome"
+IMAGE="adguard/adguardhome:latest"
 
 echo -e "${BLUE}🛡️  Deploying AdGuard Home...${NC}"
-echo -e "${BLUE}   Runtime: $CONTAINER_CMD${NC}"
 
-# Check sysctl for port 53
+# Check sysctl for unprivileged port 53
 UNPRIVILEGED_START=$(sysctl -n net.ipv4.ip_unprivileged_port_start 2>/dev/null || echo "1024")
 if [[ "$UNPRIVILEGED_START" -gt 53 ]]; then
     echo -e "${RED}❌ Port 53 not accessible for rootless containers.${NC}"
-    echo -e "${YELLOW}   Run this once on the server (requires sudo):${NC}"
+    echo -e "${YELLOW}   Run once on the server (requires sudo):${NC}"
     echo -e "${YELLOW}   echo 'net.ipv4.ip_unprivileged_port_start=53' | sudo tee /etc/sysctl.d/99-unprivileged-ports.conf${NC}"
     echo -e "${YELLOW}   sudo sysctl -p /etc/sysctl.d/99-unprivileged-ports.conf${NC}"
     exit 1
@@ -40,27 +30,33 @@ fi
 
 # Pull latest image
 echo -e "${BLUE}📦 Pulling latest AdGuard Home image...${NC}"
-$CONTAINER_CMD pull adguard/adguardhome:latest
+podman pull "$IMAGE"
 
-# Stop and remove only the adguardhome container (never touches other containers)
+# Stop and remove existing container only (never touches other containers)
 echo -e "${BLUE}⏹️  Stopping existing container...${NC}"
-$CONTAINER_CMD stop adguardhome 2>/dev/null || true
-$CONTAINER_CMD rm adguardhome 2>/dev/null || true
+podman stop "$CONTAINER_NAME" 2>/dev/null || true
+podman rm "$CONTAINER_NAME" 2>/dev/null || true
 
-# Wait for port 53 to be released by rootlessport
-sleep 2
+# Kill any lingering rootlessport process holding port 53
+fuser -k 53/tcp 2>/dev/null || true
+fuser -k 53/udp 2>/dev/null || true
+sleep 1
 
 # Start
 echo -e "${BLUE}🚀 Starting AdGuard Home...${NC}"
-$COMPOSE_CMD -f "$COMPOSE_FILE" up -d
+podman run -d \
+    --name "$CONTAINER_NAME" \
+    --restart unless-stopped \
+    -p 53:53/tcp \
+    -p 53:53/udp \
+    -p "[::]:53:53/tcp" \
+    -p "[::]:53:53/udp" \
+    -p 8082:80/tcp \
+    -v adguard_work:/opt/adguardhome/work \
+    -v adguard_conf:/opt/adguardhome/conf \
+    "$IMAGE"
 
 echo ""
 echo -e "${GREEN}✅ AdGuard Home deployed successfully${NC}"
-echo ""
-echo -e "${BLUE}📋 Next steps:${NC}"
-echo -e "   First run?  Open http://192.168.1.74:8082 and complete the setup wizard"
-echo -e "   During setup, set:"
-echo -e "     Web UI listen:  0.0.0.0:80"
-echo -e "     DNS listen:     0.0.0.0:53"
-echo -e ""
-echo -e "   Then point your router's DNS to: 192.168.1.74"
+echo -e "${BLUE}   Dashboard: http://192.168.1.74:8082${NC}"
+echo -e "${BLUE}   DNS:       192.168.1.74 (IPv4) / \$(hostname -I | awk '{print \$2}') (IPv6)${NC}"
