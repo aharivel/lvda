@@ -37,10 +37,13 @@ echo -e "${BLUE}⏹️  Stopping existing container...${NC}"
 podman stop "$CONTAINER_NAME" 2>/dev/null || true
 podman rm "$CONTAINER_NAME" 2>/dev/null || true
 
-# Kill any lingering rootlessport process holding port 53
-fuser -k 53/tcp 2>/dev/null || true
-fuser -k 53/udp 2>/dev/null || true
-sleep 1
+# Kill any lingering pasta/rootlessport process holding port 53
+# fuser doesn't reliably see network namespace processes; use ss to find the pid
+for pid in $(ss -Hnp sport = :53 2>/dev/null | grep -oP 'pid=\K[0-9]+' | sort -u); do
+    echo -e "${BLUE}   Releasing port 53 from pid $pid...${NC}"
+    kill "$pid" 2>/dev/null || true
+done
+sleep 2
 
 # Start
 echo -e "${BLUE}🚀 Starting AdGuard Home...${NC}"
