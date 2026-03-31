@@ -37,33 +37,21 @@ echo -e "${BLUE}⏹️  Stopping existing container...${NC}"
 podman stop "$CONTAINER_NAME" 2>/dev/null || true
 podman rm "$CONTAINER_NAME" 2>/dev/null || true
 
-# Kill any lingering pasta/rootlessport process holding port 53
-# ss shows no socket but pasta daemon may have stale internal state —
-# kill it so it restarts clean (containers reconnect automatically)
-for pid in $(ss -Hnp 'sport = :53' 2>/dev/null | grep -oP 'pid=\K[0-9]+' | sort -u) \
-           $(ss -Hunp 'sport = :53' 2>/dev/null | grep -oP 'pid=\K[0-9]+' | sort -u); do
-    echo -e "${BLUE}   Releasing port 53 from pid $pid...${NC}"
-    kill "$pid" 2>/dev/null || true
-done
-# Also kill pasta daemon if it has stale port 53 state (it restarts automatically)
-pkill -x pasta 2>/dev/null || true
-sleep 3
 
 # Start
+# --network=host: bypasses pasta entirely so AdGuard can make outbound DNS/DoH
+# queries directly through the host network stack. Without this, pasta's port-53
+# handling interferes with AdGuard's own upstream DNS connections.
 echo -e "${BLUE}🚀 Starting AdGuard Home...${NC}"
 podman run -d \
     --name "$CONTAINER_NAME" \
     --restart unless-stopped \
-    -p 53:53/tcp \
-    -p 53:53/udp \
-    -p "[::]:53:53/tcp" \
-    -p "[::]:53:53/udp" \
-    -p 8082:3000/tcp \
+    --network host \
     -v adguard_work:/opt/adguardhome/work \
     -v adguard_conf:/opt/adguardhome/conf \
     "$IMAGE"
 
 echo ""
 echo -e "${GREEN}✅ AdGuard Home deployed successfully${NC}"
-echo -e "${BLUE}   Dashboard: http://192.168.1.74:8082${NC}"
-echo -e "${BLUE}   DNS:       192.168.1.74 (IPv4) / \$(hostname -I | awk '{print \$2}') (IPv6)${NC}"
+echo -e "${BLUE}   Dashboard: http://192.168.1.74:3000${NC}"
+echo -e "${BLUE}   DNS:       192.168.1.74${NC}"
